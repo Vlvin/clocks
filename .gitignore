@@ -7,3 +7,4 @@ Main
 ast
 headers/Expr.h
 a.out
+lox
