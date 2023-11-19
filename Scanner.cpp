@@ -65,6 +65,10 @@ bool Scanner::isAlpha(char c) {
              (c == '_'));
 }
 
+bool Scanner::isAlphaNumeric(char c) {
+    return (isAlpha(c) || isDigit(c));
+}
+
 char Scanner::advance() {
     return source[current++];
 }
