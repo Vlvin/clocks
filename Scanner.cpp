@@ -42,6 +42,7 @@ vector<Token> Scanner::scanTokens() {
     }
 
     tokens.push_back(Token(T_EOF, "", TokenLiteral(), line));
+    return tokens;
 }
 
 bool Scanner::isAtEnd() {

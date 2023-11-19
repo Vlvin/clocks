@@ -54,9 +54,7 @@ void defAST(string dirname, string baseName, vector<string> types, vector<string
 
          << "using namespace PyUtils;\n\n";
 
-        for (string type: types) {
-            hout << "class " << trim(split(type,':')[0]) << ";\n";
-        }
+            hout << "class Visitor" << trim(baseName) << ";\n";
 
     hout << '\n';
 

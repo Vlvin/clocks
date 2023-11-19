@@ -11,14 +11,25 @@ using namespace std;
 #include "headers/TokenType.h"
 #include "headers/TokenLiteral.h"
 #include "headers/Scanner.h"
+#include "headers/VisitorExpr.h"
+#include "headers/Expr.h"
+#include "headers/Parser.h"
+#include "headers/ASTPrinter.h"
 
 void run(string source) {
+    cout << "\nScanning\n";
     Scanner scanner(source);
     vector<Token> tokens = scanner.scanTokens();
+    cout << "Parsing\n";
 
-    for (Token token: tokens) {
-        cout << token.toString() << endl;
-    }
+    Parser parser(tokens);
+    Expr* expression = parser.parse();
+    cout << Clockwork::hadError;
+
+    if (Clockwork::hadError) return;
+    cout << "Printing\n";
+
+    cout << ASTPrinter().print(expression) << endl;
 }
 
 void runPromt() {

@@ -55,16 +55,3 @@ TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) {}
 TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) {}
 TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) {}
 TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) {}
-
-
-int main() {
-    Expr* expr = new Binary(
-        new Unary(
-            Token(MINUS, "-", TokenLiteral(), 1),
-            new Literal(TokenLiteral(123.0))),
-        Token(STAR, "*", TokenLiteral(), 1),
-        new Grouping(
-            new Literal(45.67)));
-
-    cout << ASTPrinter().print(expr);
-}
