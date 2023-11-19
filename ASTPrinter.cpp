@@ -51,7 +51,7 @@ string ASTPrinter::visitUnarystring(Unary &expr) {
 }
 
 
-TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) {}
-TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) {}
-TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) {}
-TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) {}
+TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) { return TokenLiteral(); }

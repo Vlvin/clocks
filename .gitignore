@@ -8,3 +8,6 @@ ast
 headers/Expr.h
 a.out
 lox
+cases
+test
+.vscode/launch.json

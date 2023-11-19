@@ -17,17 +17,14 @@ using namespace std;
 #include "headers/ASTPrinter.h"
 
 void run(string source) {
-    cout << "\nScanning\n";
     Scanner scanner(source);
     vector<Token> tokens = scanner.scanTokens();
-    cout << "Parsing\n";
 
     Parser parser(tokens);
     Expr* expression = parser.parse();
     cout << Clockwork::hadError;
 
     if (Clockwork::hadError) return;
-    cout << "Printing\n";
 
     cout << ASTPrinter().print(expression) << endl;
 }
