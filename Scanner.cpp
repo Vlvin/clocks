@@ -62,7 +62,7 @@ bool Scanner::isDigit(char c) {
 
 bool Scanner::isAlpha(char c) {
     return (((c >= 'a') && (c <= 'z')) || 
-            ((c >= 'a') && (c <= 'z')) ||
+            ((c >= 'A') && (c <= 'Z')) ||
              (c == '_'));
 }
 
@@ -124,7 +124,7 @@ void Scanner::num() {
 void Scanner::identifier() {
     while (isAlphaNumeric(peek())) advance();
 
-    string text = source.substr(start, current);
+    string text = source.substr(start, current-start);
     TokenType type = (keywords.find(text))->second;
     if (type == NULL) type = IDENTIFIER;
     addToken(type);

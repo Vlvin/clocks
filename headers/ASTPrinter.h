@@ -16,6 +16,7 @@ class ASTPrinter : public VisitorExpr, public VisitorStmt  {
 public:
 
     string print(Expr *expr);
+    string print(vector<Stmt*> statements);
     string parenthesize(string name, vector<Expr*> vex);
 
 
@@ -24,9 +25,15 @@ public:
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
 
+    virtual string visitExpressionstring(Expression &stmt) override;
+    virtual string visitPrintstring(Print &stmt) override;
+
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;
+
+    virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
+    virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
 
 };

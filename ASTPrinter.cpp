@@ -17,6 +17,14 @@ string ASTPrinter::print(Expr *expr)  {
     return expr->acceptstring(this);
 }
 
+string ASTPrinter::print(vector<Stmt*> statements)  {
+    string code = "";
+    for (Stmt* statement: statements) {
+        code += (statement->acceptstring(this));
+    }
+    return code;
+}
+
 string ASTPrinter::parenthesize(string name, vector<Expr*> exprV) {
     string retline = "(";
     // operation name
@@ -52,7 +60,19 @@ string ASTPrinter::visitUnarystring(Unary &expr) {
 }
 
 
+
+string ASTPrinter::visitExpressionstring(Expression &stmt) {
+    return "EXPRESSION " + print(stmt.expression);
+}
+string ASTPrinter::visitPrintstring(Print &stmt) {
+    return "PRINT " + print(stmt.expression);
+}
+
+
 TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) { return TokenLiteral(); }
+
+TokenLiteral ASTPrinter::visitExpressionTokenLiteral(Expression &stmt) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitPrintTokenLiteral(Print &stmt) { return TokenLiteral(); }

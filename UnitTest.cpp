@@ -22,19 +22,25 @@ using namespace std;
 using namespace PyUtils;
 
 bool test(string source, string expected) {
+    fstream log("log.txt", ios::out | ios::trunc);
     Scanner scanner(source);
     vector<Token> tokens = scanner.scanTokens();
-
+    vector<Stmt*> statements = {};
     Parser parser(tokens);
-    vector<Stmt*> expression = parser.parse();
-    string got = ASTPrinter().print(expression);
+    try {
+    statements = parser.parse();
+    } catch (ParseError error) {
+        return false;
+    }
+    string got = ASTPrinter().print(statements);
 
     if (Clockwork::hadError) return false;
 
-    if(expected != got) {
+    if(string(expected) != string(got)) {
         cout << "Test " << source << " Failed " 
              << expected << " expected but " 
              << got << " got\n";
+        log << got << endl << expected << endl;
         return false;
     }
     return true;

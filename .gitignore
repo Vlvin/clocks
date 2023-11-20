@@ -12,3 +12,4 @@ cases
 test
 .vscode/launch.json
 builddebug
+log.txt
