@@ -10,8 +10,9 @@
 #include "TokenLiteral.h"
 #include "TokenType.h"
 #include "VisitorExpr.h"
+#include "VisitorStmt.h"
 
-class ASTPrinter : public VisitorExpr {
+class ASTPrinter : public VisitorExpr, public VisitorStmt  {
 public:
 
     string print(Expr *expr);

@@ -6,14 +6,17 @@
 
 #include "Clockswork.h"
 #include "Expr.h"
+#include "Stmt.h"
 #include "Token.h"
 #include "TokenLiteral.h"
 #include "TokenType.h"
 #include "VisitorExpr.h"
+#include "VisitorStmt.h"
 
-class Interpreter : public VisitorExpr {
+class Interpreter : public VisitorExpr, public VisitorStmt {
 
     TokenLiteral evaluate(Expr *expr);
+    TokenLiteral execute(Stmt *statement);
 
     string stringify(TokenLiteral literal);
 
@@ -23,17 +26,24 @@ class Interpreter : public VisitorExpr {
     void checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right);
 public:
 
-    void interpret(Expr *expr);
+    void interpret(vector<Stmt*> statements);
+    void interpret(Expr* expr);
 
     virtual string visitBinarystring(Binary &expr) override;
     virtual string visitGroupingstring(Grouping &expr) override;
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
 
+    virtual string visitExpressionstring(Expression &stmt) override;
+    virtual string visitPrintstring(Print &stmt) override;
+
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;
+
+    virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
+    virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
 
 
 };

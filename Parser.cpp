@@ -5,6 +5,7 @@
 
 #include "headers/Clockswork.h"
 #include "headers/Expr.h"
+#include "headers/Stmt.h"
 #include "headers/Token.h"
 #include "headers/TokenLiteral.h"
 #include "headers/TokenType.h"
@@ -82,12 +83,29 @@ Token Parser::consume(TokenType type, string message) {
     throw error(peek(), message);
 }
 
-Expr* Parser::parse() {
-    try {
-        return expression();
-    } catch (ParseError error) {
-        return NULL;
+vector<Stmt*> Parser::parse() {
+    vector<Stmt*> statements = {};
+    while (!isAtEnd()) {
+        statements.push_back(statement());
     }
+    return statements;
+}
+
+Stmt* Parser::statement() {
+    if (match({PRINT})) return printStatements();
+    return expressionStatement();
+}
+
+Stmt* Parser::printStatements() {
+    Expr* value = expression();
+    consume(SEMICOLON, "Expect ';' after value");
+    return new Print(value);
+}
+
+Stmt* Parser::expressionStatement() {
+    Expr* expr = expression();
+    consume(SEMICOLON, "Expect ';' after value");
+    return new Expression(expr);
 }
 
 Expr* Parser::expression() {

@@ -6,6 +6,7 @@
 
 #include "Clockswork.h"
 #include "Expr.h"
+#include "Stmt.h"
 #include "Token.h"
 #include "TokenLiteral.h"
 #include "TokenType.h"
@@ -28,6 +29,10 @@ class Parser {
     Expr* unary();
     Expr* primary();
 
+    Stmt* statement();
+    Stmt* printStatements();
+    Stmt* expressionStatement();
+
     bool match(vector<TokenType> types);
     bool check(TokenType type);
     bool isAtEnd();
@@ -39,7 +44,7 @@ class Parser {
     
     ParseError error(Token token, string message);
 public:
-    Expr* parse();
+    vector<Stmt*> parse();
 
     Parser(vector<Token> tokens);
 };

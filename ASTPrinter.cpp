@@ -9,6 +9,7 @@
 #include "headers/TokenType.h"
 #include "headers/VisitorExpr.h"
 #include "headers/ASTPrinter.h"
+#include "headers/VisitorStmt.h"
 
 
 

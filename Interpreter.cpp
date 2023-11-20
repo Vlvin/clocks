@@ -4,10 +4,12 @@
 
 #include "headers/Clockswork.h"
 #include "headers/Expr.h"
+#include "headers/Stmt.h"
 #include "headers/Token.h"
 #include "headers/TokenLiteral.h"
 #include "headers/TokenType.h"
 #include "headers/VisitorExpr.h"
+#include "headers/VisitorStmt.h"
 #include "headers/Interpreter.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
@@ -15,9 +17,15 @@ string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitUnarystring(Unary &expr){ return ""; }
 
+string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
+string Interpreter::visitPrintstring(Print &stmt) { return ""; }
+
 TokenLiteral Interpreter::evaluate(Expr* expr) {
-    expr[10];
     return expr->acceptTokenLiteral(this);
+}
+
+TokenLiteral Interpreter::execute(Stmt* statement) {
+    return statement->acceptTokenLiteral(this);
 }
 
 string Interpreter::stringify(TokenLiteral literal) {
@@ -121,10 +129,32 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
     return TokenLiteral();
 }
 
+
+TokenLiteral Interpreter::visitExpressionTokenLiteral(Expression &stmt) {
+    evaluate(stmt.expression);
+    return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitPrintTokenLiteral(Print &stmt) {
+    TokenLiteral value = evaluate(stmt.expression);
+    cout << stringify(value);
+    return TokenLiteral();
+}
+
 void Interpreter::interpret(Expr *expr) {
     try {
         TokenLiteral value = evaluate(expr);
         cout << (stringify(value)) << endl;
+    } catch (RuntimeException error) {
+        Clockwork::runtimeError(error);
+    }
+}
+
+void Interpreter::interpret(vector<Stmt*> statements) {
+    try {
+        for (Stmt* statement: statements) {
+            execute(statement);
+        }
     } catch (RuntimeException error) {
         Clockwork::runtimeError(error);
     }

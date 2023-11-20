@@ -12,7 +12,9 @@ using namespace std;
 #include "headers/TokenLiteral.h"
 #include "headers/Scanner.h"
 #include "headers/VisitorExpr.h"
+#include "headers/VisitorStmt.h"
 #include "headers/Expr.h"
+#include "headers/Stmt.h"
 #include "headers/Parser.h"
 #include "headers/ASTPrinter.h"
 #include "headers/Interpreter.h"
@@ -20,15 +22,19 @@ using namespace std;
 void run(string source) {
     Scanner scanner(source);
     vector<Token> tokens = scanner.scanTokens();
-
+    vector<Stmt*> statements = {};
     Parser parser(tokens);
-    Expr* expression = parser.parse();
+    try {
+        statements = parser.parse();
+    } catch (ParseError error) {
+        return;
+    }
 
 
     if (Clockwork::hadError) return;
     Interpreter interpreter = Interpreter();
     
-    interpreter.interpret(expression);
+    interpreter.interpret(statements);
 }
 
 void runPromt() {

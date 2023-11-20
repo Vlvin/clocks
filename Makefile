@@ -7,18 +7,18 @@ buildonly:
 	make ast
 	make lox
 
-builddebug: Main.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
+builddebug: Main.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	make ast
 	g++ $^ -o lox -g
 
 
-lox: Main.cpp  Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
+lox: Main.cpp  Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	g++ $^ -o $@
 
 ast:
 	g++ ./toolset/ASTGEN.cpp -o $@
 	./$@
 
-test: UnitTest.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
+test: UnitTest.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	g++ $^ -o $@
 	./$@ cases

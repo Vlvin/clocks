@@ -12,6 +12,8 @@ using namespace std;
 #include "headers/TokenLiteral.h"
 #include "headers/Scanner.h"
 #include "headers/VisitorExpr.h"
+#include "headers/VisitorStmt.h"
+#include "headers/Stmt.h"
 #include "headers/Expr.h"
 #include "headers/Parser.h"
 #include "headers/ASTPrinter.h"
@@ -24,7 +26,7 @@ bool test(string source, string expected) {
     vector<Token> tokens = scanner.scanTokens();
 
     Parser parser(tokens);
-    Expr* expression = parser.parse();
+    vector<Stmt*> expression = parser.parse();
     string got = ASTPrinter().print(expression);
 
     if (Clockwork::hadError) return false;

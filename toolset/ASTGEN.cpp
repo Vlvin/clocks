@@ -17,8 +17,8 @@ vector<string> exprtypes = {
 
 
 vector<string> stmtypes = {
-    "Expr   : Expr left"
-    // "Grouping : Expr expression",
+    "Expression   : Expr* expression",
+    "Print : Expr* expression"
     // "Literal  : Object value",
     // "Unary    : Token operator, Expr right"
 };
@@ -48,6 +48,7 @@ void defAST(string dirname, string baseName, vector<string> types, vector<string
          << "#include \"TokenLiteral.h\"\n"
          << "#include \"Token.h\"\n"
          << "#include \"TokenType.h\"\n"
+         << "#include \"Expr.h\"\n"
          << "#include \"PyUtils.h\"\n\n"
          << "#include \"Visitor" << trim(baseName) << ".h\"\n\n"
          // place local include in header here
@@ -74,7 +75,7 @@ void defAST(string dirname, string baseName, vector<string> types, vector<string
         string sonT = trim(split(type,':')[0]);
         string args = trim(split(type,':')[1]);
 
-        hout << "class " << sonT << " : public Expr {\n";  // start of son class definition
+        hout << "class " << sonT << " : public " << baseName << " {\n";  // start of son class definition
 
 
         hout << "public:\n";
@@ -166,7 +167,7 @@ void defV(string dirname, string baseName, vector<string> types, vector<string> 
     // inner abstract funs
     for (string retype: retypes) {
         for (string type: types) {
-                hout << "   virtual " << retype << " visit" << trim(split(type,':')[0]) <<  trim(retype) << "(" << trim(split(type,':')[0]) << " &expr) = 0;\n";
+                hout << "   virtual " << retype << " visit" << trim(split(type,':')[0]) <<  trim(retype) << "(" << trim(split(type,':')[0]) << " &" << lcase(trim(baseName)) << ") = 0;\n";
         }
         hout << '\n';
     }
@@ -180,6 +181,9 @@ void defV(string dirname, string baseName, vector<string> types, vector<string> 
 int main() {
     defAST(".","Expr", exprtypes, retutypes);
     defV(".","Expr", exprtypes, retutypes);
+
+    defAST(".","Stmt", stmtypes, retutypes);
+    defV(".","Stmt", stmtypes, retutypes);
 }
 
 /*
