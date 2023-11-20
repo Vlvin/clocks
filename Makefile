@@ -9,7 +9,7 @@ buildonly:
 
 builddebug: Main.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	make ast
-	g++ $^ -o $@ -g
+	g++ $^ -o lox -g
 
 
 lox: Main.cpp  Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp

@@ -16,6 +16,7 @@ string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitUnarystring(Unary &expr){ return ""; }
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
+    expr[10];
     return expr->acceptTokenLiteral(this);
 }
 

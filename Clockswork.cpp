@@ -23,10 +23,10 @@ void Clockwork::error(Token token, string message) {
 
 void Clockwork::runtimeError(RuntimeException error) {
     cout << (error.message + "\n[line " + to_string(error.token.line) + "]") << endl;
-    
+    hadRuntimeError = true;
 }
 
 void Clockwork::report(int line, string where, string message) {
     cout << "[line " << line << "] Error " << where << ": " << message << endl; 
-    hadRuntimeError = true;
+    hadError = true;
 }

@@ -24,10 +24,10 @@ void run(string source) {
     Parser parser(tokens);
     Expr* expression = parser.parse();
 
-    Interpreter interpreter = Interpreter();
 
     if (Clockwork::hadError) return;
-
+    Interpreter interpreter = Interpreter();
+    
     interpreter.interpret(expression);
 }
 
@@ -37,8 +37,8 @@ void runPromt() {
     for(;;) {
         cout << "\nlox >> ";
         cin.getline(cline,64);
-        if (line == string("exit")) return;
         line = string(cline);
+        if (line == string("exit")) return;
         run(line);
         Clockwork::hadError = false;
         Clockwork::hadRuntimeError = false;
