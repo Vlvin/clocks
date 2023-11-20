@@ -26,4 +26,6 @@ public:
 
     string toString();
     double toNumber();
+
+    bool equals(TokenLiteral other);
 };

@@ -41,3 +41,7 @@ double TokenLiteral::toNumber() {
     return NULL;
 
 }
+
+bool TokenLiteral::equals(TokenLiteral other) {
+    return ((this->type == other.type) && (this->toString() == other.toString()));
+}

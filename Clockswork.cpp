@@ -7,6 +7,7 @@ using namespace std;
 #include "headers/Token.h"
 
 bool Clockwork::hadError = false;
+bool Clockwork::hadRuntimeError = false;
 
 void Clockwork::error(int line, string message) {
     report(line, "", message);
@@ -20,7 +21,12 @@ void Clockwork::error(Token token, string message) {
     }
 }
 
+void Clockwork::runtimeError(RuntimeException error) {
+    cout << (error.message + "\n[line " + to_string(error.token.line) + "]") << endl;
+    
+}
+
 void Clockwork::report(int line, string where, string message) {
     cout << "[line " << line << "] Error " << where << ": " << message << endl; 
-    hadError = true;
+    hadRuntimeError = true;
 }

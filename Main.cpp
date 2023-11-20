@@ -15,6 +15,7 @@ using namespace std;
 #include "headers/Expr.h"
 #include "headers/Parser.h"
 #include "headers/ASTPrinter.h"
+#include "headers/Interpreter.h"
 
 void run(string source) {
     Scanner scanner(source);
@@ -22,11 +23,12 @@ void run(string source) {
 
     Parser parser(tokens);
     Expr* expression = parser.parse();
-    cout << Clockwork::hadError;
+
+    Interpreter interpreter = Interpreter();
 
     if (Clockwork::hadError) return;
 
-    cout << ASTPrinter().print(expression) << endl;
+    interpreter.interpret(expression);
 }
 
 void runPromt() {
@@ -39,6 +41,7 @@ void runPromt() {
         line = string(cline);
         run(line);
         Clockwork::hadError = false;
+        Clockwork::hadRuntimeError = false;
     }
 }
 
@@ -55,6 +58,7 @@ void runFile(string path) {
 
     run(text);
     if (Clockwork::hadError) exit(65);
+    if (Clockwork::hadRuntimeError) exit(70);
 }
 
 

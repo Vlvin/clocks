@@ -40,4 +40,8 @@ namespace PyUtils {
         }
         return strrange(tot, start, end+1);
     }
+
+    static bool endswith(string text, string ending) {
+        return (strrange(text, (text.length() - ending.length()), text.length())) == ending;   
+    }
 }
