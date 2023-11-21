@@ -22,7 +22,7 @@ ParseError Parser::error(Token token, string message) {
     return ParseError();
 }
 
-void Parser::synchonize() {
+void Parser::synchronize() {
         advance();
 
         while (!isAtEnd()) {
@@ -86,9 +86,32 @@ Token Parser::consume(TokenType type, string message) {
 vector<Stmt*> Parser::parse() {
     vector<Stmt*> statements = {};
     while (!isAtEnd()) {
-        statements.push_back(statement());
+        statements.push_back(declaration());
     }
     return statements;
+}
+
+Stmt* Parser::declaration() {
+    try {
+        if (match({VAR})) return varDeclaration();
+
+        return statement();
+    } catch (ParseError error) {
+        synchronize();
+        return NULL;
+    }
+}
+
+Stmt* Parser::varDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect variable name");
+
+    Expr* initializer = NULL;
+    if (match({EQUAL})) {
+        initializer = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after variable declaration.");
+    return new Var(name, initializer);
 }
 
 Stmt* Parser::statement() {
@@ -109,7 +132,17 @@ Stmt* Parser::expressionStatement() {
 }
 
 Expr* Parser::expression() {
-    return equality();
+    return assignment();
+}
+
+Expr* Parser::assignment() {
+    Expr* expr = equality();
+
+    if (match({EQUAL})) {
+        Token equals = previous();
+        Expr* value = assignment();
+        if (/*expr instanceof Expr.Variable*/true);
+    }
 }
 
 Expr* Parser::equality() {
@@ -177,6 +210,9 @@ Expr* Parser::primary() {
     if (match({TokenType::NIL})) return new Literal(TokenLiteral());
     if (match({TokenType::NUMBER, TokenType::STRING})) {
         return new Literal(previous().literal);
+    }
+    if (match({IDENTIFIER})) {
+        return new Variable(previous());
     }
     if (match({LEFT_PAREN})) {
         Expr* expr = expression();

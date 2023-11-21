@@ -59,6 +59,10 @@ string ASTPrinter::visitUnarystring(Unary &expr) {
 
 }
 
+string ASTPrinter::visitVariablestring(Variable &expr) {
+    return expr.name.lexeme;
+}
+
 
 
 string ASTPrinter::visitExpressionstring(Expression &stmt) {
@@ -67,12 +71,17 @@ string ASTPrinter::visitExpressionstring(Expression &stmt) {
 string ASTPrinter::visitPrintstring(Print &stmt) {
     return "PRINT " + print(stmt.expression);
 }
+string ASTPrinter::visitVarstring(Var &stmt) {
+    return "VAR " + stmt.name.lexeme + " " + print(stmt.initializer);
+}
 
 
 TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitVariableTokenLiteral(Variable &expr) { return TokenLiteral(); }
 
 TokenLiteral ASTPrinter::visitExpressionTokenLiteral(Expression &stmt) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitPrintTokenLiteral(Print &stmt) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitVarTokenLiteral(Var &stmt) { return TokenLiteral(); }

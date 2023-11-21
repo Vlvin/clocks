@@ -43,3 +43,14 @@ public:
 
 };
 
+class Var : public Stmt {
+public:
+   Token name;
+   Expr* initializer;
+   Var(Token name, Expr* initializer);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+

@@ -29,3 +29,13 @@ TokenLiteral Print::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor-
 }
 
 
+Var::Var(Token name, Expr* initializer)
+     : name(name),initializer(initializer) {}
+
+string Var::acceptstring(VisitorStmt *visitor) {   return visitor->visitVarstring(*this);
+}
+
+TokenLiteral Var::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitVarTokenLiteral(*this);
+}
+
+

@@ -12,14 +12,16 @@ vector<string> exprtypes = {
     "Binary   : Expr* left, Token oper, Expr* right",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
-    "Unary    : Token oper, Expr* right"
+    "Unary    : Token oper, Expr* right",
+    "Variable : Token name",
+    "Assign   : Token name, Expr* value"
 };
 
 
 vector<string> stmtypes = {
     "Expression   : Expr* expression",
-    "Print : Expr* expression"
-    // "Literal  : Object value",
+    "Print : Expr* expression",
+    "Var  : Token name, Expr* initializer",
     // "Unary    : Token operator, Expr right"
 };
 

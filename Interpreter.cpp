@@ -10,15 +10,18 @@
 #include "headers/TokenType.h"
 #include "headers/VisitorExpr.h"
 #include "headers/VisitorStmt.h"
+#include "headers/Environment.h"
 #include "headers/Interpreter.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitUnarystring(Unary &expr){ return ""; }
+string Interpreter::visitVariablestring(Variable &expr){ return ""; }
 
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
+string Interpreter::visitVarstring(Var &stmt) { return ""; }
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
     return expr->acceptTokenLiteral(this);
@@ -129,6 +132,10 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
     return TokenLiteral();
 }
 
+TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
+    return environment.get(expr.name);
+}
+
 
 TokenLiteral Interpreter::visitExpressionTokenLiteral(Expression &stmt) {
     evaluate(stmt.expression);
@@ -138,6 +145,17 @@ TokenLiteral Interpreter::visitExpressionTokenLiteral(Expression &stmt) {
 TokenLiteral Interpreter::visitPrintTokenLiteral(Print &stmt) {
     TokenLiteral value = evaluate(stmt.expression);
     cout << stringify(value);
+    return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
+    TokenLiteral value = TokenLiteral();
+
+    if (stmt.initializer != NULL) {
+        value = evaluate(stmt.initializer);
+    }
+
+    environment.define(stmt.name.lexeme, value);
     return TokenLiteral();
 }
 

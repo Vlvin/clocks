@@ -15,8 +15,8 @@ builddebug: Main.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp S
 lox: Main.cpp  Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	g++ $^ -o $@
 
-ast:
-	g++ ./toolset/ASTGEN.cpp -o $@
+ast: ./toolset/ASTGEN.cpp
+	g++ $^ -o $@
 	./$@
 
 test: UnitTest.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp

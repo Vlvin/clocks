@@ -14,6 +14,8 @@ class Binary;
 class Grouping;
 class Literal;
 class Unary;
+class Variable;
+class Assign;
 
 class VisitorExpr {
 public:
@@ -21,11 +23,15 @@ public:
    virtual string visitGroupingstring(Grouping &expr) = 0;
    virtual string visitLiteralstring(Literal &expr) = 0;
    virtual string visitUnarystring(Unary &expr) = 0;
+   virtual string visitVariablestring(Variable &expr) = 0;
+   virtual string visitAssignstring(Assign &expr) = 0;
 
    virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) = 0;
    virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) = 0;
    virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) = 0;
    virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) = 0;
+   virtual TokenLiteral visitVariableTokenLiteral(Variable &expr) = 0;
+   virtual TokenLiteral visitAssignTokenLiteral(Assign &expr) = 0;
 
 };
 

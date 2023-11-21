@@ -49,3 +49,23 @@ TokenLiteral Unary::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor-
 }
 
 
+Variable::Variable(Token name)
+     : name(name) {}
+
+string Variable::acceptstring(VisitorExpr *visitor) {   return visitor->visitVariablestring(*this);
+}
+
+TokenLiteral Variable::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitVariableTokenLiteral(*this);
+}
+
+
+Assign::Assign(Token name, Expr* value)
+     : name(name),value(value) {}
+
+string Assign::acceptstring(VisitorExpr *visitor) {   return visitor->visitAssignstring(*this);
+}
+
+TokenLiteral Assign::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitAssignTokenLiteral(*this);
+}
+
+

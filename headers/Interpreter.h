@@ -12,9 +12,11 @@
 #include "TokenType.h"
 #include "VisitorExpr.h"
 #include "VisitorStmt.h"
+#include "Environment.h"
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
 
+    Environment environment = Environment();
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -33,17 +35,21 @@ public:
     virtual string visitGroupingstring(Grouping &expr) override;
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
+    virtual string visitVariablestring(Variable &expr) override;
 
     virtual string visitExpressionstring(Expression &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
+    virtual string visitVarstring(Var &stmt) override;
 
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;
+    virtual TokenLiteral visitVariableTokenLiteral(Variable &expr) override;
 
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
+    virtual TokenLiteral visitVarTokenLiteral(Var &stmt) override;
 
 
 };

@@ -19,9 +19,10 @@ class Parser {
     vector<Token> tokens;
     int current = 0;
 
-    void synchonize();
+    void synchronize();
 
     Expr* expression();
+    Expr* assignment();
     Expr* equality();
     Expr* comparison();
     Expr* term();
@@ -29,6 +30,8 @@ class Parser {
     Expr* unary();
     Expr* primary();
 
+    Stmt* declaration();
+    Stmt* varDeclaration();
     Stmt* statement();
     Stmt* printStatements();
     Stmt* expressionStatement();
