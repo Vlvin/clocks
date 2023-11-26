@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <map>
 
 #include "headers/Clockswork.h"
@@ -17,6 +16,15 @@ using namespace std;
 
 void Environment::define(string name, TokenLiteral value) {
     values.insert({name, value});
+}
+
+void Environment::assign(Token name, TokenLiteral value) {
+    if (values.count(name.lexeme) > 0) {
+            values.insert({name.lexeme, value});
+        return;
+    }
+
+    throw RuntimeException(name, "Undefined variable '" + name.lexeme + "'.");
 }
 
 TokenLiteral Environment::get(Token name){

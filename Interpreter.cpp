@@ -18,6 +18,7 @@ string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitUnarystring(Unary &expr){ return ""; }
 string Interpreter::visitVariablestring(Variable &expr){ return ""; }
+string Interpreter::visitAssignstring(Assign& expr){ return "";}
 
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
@@ -134,6 +135,12 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
 
 TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
     return environment.get(expr.name);
+}
+
+TokenLiteral Interpreter::visitAssignTokenLiteral(Assign &expr) {
+    TokenLiteral value = evaluate(expr.value);
+    environment.assign(expr.name, value);
+    return value;
 }
 
 

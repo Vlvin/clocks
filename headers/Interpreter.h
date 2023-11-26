@@ -36,6 +36,7 @@ public:
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
     virtual string visitVariablestring(Variable &expr) override;
+    virtual string visitAssignstring(Assign &expr) override;
 
     virtual string visitExpressionstring(Expression &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
@@ -46,6 +47,7 @@ public:
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;
     virtual TokenLiteral visitVariableTokenLiteral(Variable &expr) override;
+    virtual TokenLiteral visitAssignTokenLiteral(Assign &expr) override;
 
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;

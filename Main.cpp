@@ -11,6 +11,7 @@ using namespace std;
 #include "headers/Token.h"
 #include "headers/TokenType.h"
 #include "headers/TokenLiteral.h"
+#include "headers/Environment.h"
 #include "headers/Scanner.h"
 #include "headers/VisitorExpr.h"
 #include "headers/VisitorStmt.h"
@@ -20,6 +21,7 @@ using namespace std;
 #include "headers/ASTPrinter.h"
 #include "headers/Interpreter.h"
 
+static Interpreter interpreter = Interpreter();
 void run(string source) {
     Scanner scanner(source);
     vector<Token> tokens = scanner.scanTokens();
@@ -33,7 +35,6 @@ void run(string source) {
 
 
     if (Clockwork::hadError) return;
-    Interpreter interpreter = Interpreter();
     
     interpreter.interpret(statements);
 }

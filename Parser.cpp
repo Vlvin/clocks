@@ -141,8 +141,15 @@ Expr* Parser::assignment() {
     if (match({EQUAL})) {
         Token equals = previous();
         Expr* value = assignment();
-        if (/*expr instanceof Expr.Variable*/true);
+        Variable *assign = dynamic_cast<Variable *>(expr);
+        if (assign != nullptr) {
+            Token name = assign->name;
+            return new Assign(name, value);
+        }
+
+        error(equals, "Invalid assignmnt target");
     }
+    return expr;
 }
 
 Expr* Parser::equality() {

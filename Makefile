@@ -12,13 +12,13 @@ builddebug: Main.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp S
 	g++ $^ -o lox -g
 
 
-lox: Main.cpp  Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
+lox: Main.cpp Environment.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	g++ $^ -o $@
 
 ast: ./toolset/ASTGEN.cpp
 	g++ $^ -o $@
 	./$@
 
-test: UnitTest.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
+test: UnitTest.cpp Environment.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp
 	g++ $^ -o $@
 	./$@ cases
