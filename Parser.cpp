@@ -116,6 +116,9 @@ Stmt* Parser::varDeclaration() {
 
 Stmt* Parser::statement() {
     if (match({PRINT})) return printStatements();
+    if (match({LEFT_BRACE})) {
+        return new Block(block());
+    }
     return expressionStatement();
 }
 
@@ -129,6 +132,16 @@ Stmt* Parser::expressionStatement() {
     Expr* expr = expression();
     consume(SEMICOLON, "Expect ';' after value");
     return new Expression(expr);
+}
+
+vector<Stmt*> Parser::block() {
+    vector<Stmt*> statements = {};
+    while ((!check(RIGHT_BRACE)) && (!isAtEnd())) {
+        statements.push_back(declaration());
+    }
+
+    consume(RIGHT_BRACE, "Expect '}' after block");
+    return statements;
 }
 
 Expr* Parser::expression() {

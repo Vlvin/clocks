@@ -20,6 +20,10 @@ class Environment {
     map<string, TokenLiteral> values;
 
 public:
+
+    Environment();
+    Environment (Environment *enclosing);
+    Environment *enclosing; // this is your problem now
     void define(string name, TokenLiteral value);
     void assign(Token name, TokenLiteral value);
 

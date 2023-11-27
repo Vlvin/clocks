@@ -39,3 +39,13 @@ TokenLiteral Var::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->v
 }
 
 
+Block::Block(vector<Stmt*> statements)
+     : statements(statements) {}
+
+string Block::acceptstring(VisitorStmt *visitor) {   return visitor->visitBlockstring(*this);
+}
+
+TokenLiteral Block::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitBlockTokenLiteral(*this);
+}
+
+

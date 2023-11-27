@@ -35,6 +35,7 @@ class Parser {
     Stmt* statement();
     Stmt* printStatements();
     Stmt* expressionStatement();
+    vector<Stmt*> block();
 
     bool match(vector<TokenType> types);
     bool check(TokenType type);

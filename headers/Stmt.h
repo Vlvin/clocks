@@ -54,3 +54,13 @@ public:
 
 };
 
+class Block : public Stmt {
+public:
+   vector<Stmt*> statements;
+   Block(vector<Stmt*> statements);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+

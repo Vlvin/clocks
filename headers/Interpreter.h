@@ -16,7 +16,7 @@
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
 
-    Environment environment = Environment();
+    Environment *environment = new Environment();
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -30,6 +30,7 @@ public:
 
     void interpret(vector<Stmt*> statements);
     void interpret(Expr* expr);
+    void executeBlock(vector<Stmt*> statements, Environment *environment);
 
     virtual string visitBinarystring(Binary &expr) override;
     virtual string visitGroupingstring(Grouping &expr) override;
@@ -41,6 +42,7 @@ public:
     virtual string visitExpressionstring(Expression &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
     virtual string visitVarstring(Var &stmt) override;
+    virtual string visitBlockstring(Block &stmt) override;
 
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
@@ -52,6 +54,7 @@ public:
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
     virtual TokenLiteral visitVarTokenLiteral(Var &stmt) override;
+    virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) override;
 
 
 };

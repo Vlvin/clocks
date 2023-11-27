@@ -23,6 +23,7 @@ string Interpreter::visitAssignstring(Assign& expr){ return "";}
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
 string Interpreter::visitVarstring(Var &stmt) { return ""; }
+string Interpreter::visitBlockstring(Block &stmt) { return ""; }
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
     return expr->acceptTokenLiteral(this);
@@ -134,12 +135,12 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
 }
 
 TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
-    return environment.get(expr.name);
+    return environment->get(expr.name);
 }
 
 TokenLiteral Interpreter::visitAssignTokenLiteral(Assign &expr) {
     TokenLiteral value = evaluate(expr.value);
-    environment.assign(expr.name, value);
+    environment->assign(expr.name, value);
     return value;
 }
 
@@ -162,8 +163,26 @@ TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
         value = evaluate(stmt.initializer);
     }
 
-    environment.define(stmt.name.lexeme, value);
+    environment->define(stmt.name.lexeme, value);
     return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitBlockTokenLiteral(Block &stmt) {
+    executeBlock(stmt.statements, new Environment(environment));
+    return TokenLiteral();
+}
+
+void Interpreter::executeBlock(vector <Stmt*> statements, Environment *environment) {
+    Environment *previous = this->environment;
+    try {
+        this->environment = environment;
+
+        for (Stmt* statement : statements) {
+            execute(statement);
+        }
+    } catch (...) {}
+    // finally
+    this->environment = previous;
 }
 
 void Interpreter::interpret(Expr *expr) {

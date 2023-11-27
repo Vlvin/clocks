@@ -22,7 +22,7 @@ vector<string> stmtypes = {
     "Expression   : Expr* expression",
     "Print : Expr* expression",
     "Var  : Token name, Expr* initializer",
-    // "Unary    : Token operator, Expr right"
+    "Block    : vector<Stmt*> statements"
 };
 
 vector<string> retutypes = {
