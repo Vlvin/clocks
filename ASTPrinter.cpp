@@ -56,11 +56,14 @@ string ASTPrinter::visitLiteralstring(Literal &expr) {
 
 string ASTPrinter::visitUnarystring(Unary &expr) {
     return parenthesize(expr.oper.lexeme, {expr.right});
-
 }
 
 string ASTPrinter::visitVariablestring(Variable &expr) {
     return expr.name.lexeme;
+}
+
+string ASTPrinter::visitAssignstring(Assign &expr) {
+    return parenthesize("= " + expr.name.lexeme, {expr.value});
 }
 
 
@@ -74,6 +77,20 @@ string ASTPrinter::visitPrintstring(Print &stmt) {
 string ASTPrinter::visitVarstring(Var &stmt) {
     return "VAR " + stmt.name.lexeme + " " + print(stmt.initializer);
 }
+string ASTPrinter::visitBlockstring(Block &stmt) {
+    string parent = "BLOCK {";
+    for (Stmt* statement: stmt.statements) {
+        parent += " " + statement->acceptstring(this);
+    }
+    parent += "}";
+    return parent;
+}
+string ASTPrinter::visitIfstring(If &stmt) {
+    string toret = parenthesize("IF", {stmt.condition});
+    toret += " THEN " + stmt.thenBranch->acceptstring(this);
+    if (stmt.elseBranch != NULL) toret += " ELSE " + stmt.elseBranch->acceptstring(this);
+    return toret;
+}   
 
 
 TokenLiteral ASTPrinter::visitBinaryTokenLiteral(Binary &expr) { return TokenLiteral(); }
@@ -81,7 +98,10 @@ TokenLiteral ASTPrinter::visitGroupingTokenLiteral(Grouping &expr) { return Toke
 TokenLiteral ASTPrinter::visitLiteralTokenLiteral(Literal &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitUnaryTokenLiteral(Unary &expr) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitVariableTokenLiteral(Variable &expr) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitAssignTokenLiteral(Assign &expr) { return TokenLiteral(); }
 
 TokenLiteral ASTPrinter::visitExpressionTokenLiteral(Expression &stmt) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitPrintTokenLiteral(Print &stmt) { return TokenLiteral(); }
 TokenLiteral ASTPrinter::visitVarTokenLiteral(Var &stmt) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitBlockTokenLiteral(Block &stmt) { return TokenLiteral(); }
+TokenLiteral ASTPrinter::visitIfTokenLiteral(If &stmt) { return TokenLiteral(); }

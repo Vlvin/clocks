@@ -16,6 +16,7 @@
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
+string Interpreter::visitLogicalstring(Logical &expr) { return ""; }
 string Interpreter::visitUnarystring(Unary &expr){ return ""; }
 string Interpreter::visitVariablestring(Variable &expr){ return ""; }
 string Interpreter::visitAssignstring(Assign& expr){ return "";}
@@ -24,6 +25,8 @@ string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
 string Interpreter::visitVarstring(Var &stmt) { return ""; }
 string Interpreter::visitBlockstring(Block &stmt) { return ""; }
+string Interpreter::visitIfstring(If &stmt) { return ""; }
+string Interpreter::visitWhilestring(While &stmt) { return ""; }
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
     return expr->acceptTokenLiteral(this);
@@ -120,6 +123,18 @@ TokenLiteral Interpreter::visitLiteralTokenLiteral(Literal &expr) {
     return expr.value;
 }
 
+TokenLiteral Interpreter::visitLogicalTokenLiteral(Logical &expr) {
+    TokenLiteral left = evaluate(expr.left);
+
+    if (expr.oper.type == TokenType::OR) {
+        if (isTruthy(left)) return left;
+    } else { 
+        if (!isTruthy(left)) return left; 
+    }
+
+    return evaluate(expr.right);
+}
+
 TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
     TokenLiteral right = evaluate(expr.right);
 
@@ -169,6 +184,23 @@ TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
 
 TokenLiteral Interpreter::visitBlockTokenLiteral(Block &stmt) {
     executeBlock(stmt.statements, new Environment(environment));
+    return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitIfTokenLiteral(If& stmt) {
+    if (isTruthy(evaluate(stmt.condition))) {
+        execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != NULL) {
+        execute(stmt.elseBranch);
+    }
+    return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitWhileTokenLiteral(While &stmt) {
+    while(isTruthy(evaluate(stmt.condition))) {
+        execute(stmt.body);
+    }
+
     return TokenLiteral();
 }
 

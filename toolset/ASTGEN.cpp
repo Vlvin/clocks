@@ -12,6 +12,7 @@ vector<string> exprtypes = {
     "Binary   : Expr* left, Token oper, Expr* right",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
+    "Logical  : Expr* left, Token oper, Expr* right",
     "Unary    : Token oper, Expr* right",
     "Variable : Token name",
     "Assign   : Token name, Expr* value"
@@ -19,10 +20,12 @@ vector<string> exprtypes = {
 
 
 vector<string> stmtypes = {
-    "Expression   : Expr* expression",
-    "Print : Expr* expression",
-    "Var  : Token name, Expr* initializer",
-    "Block    : vector<Stmt*> statements"
+    "Expression : Expr* expression",
+    "Print      : Expr* expression",
+    "Var        : Token name, Expr* initializer",
+    "Block      : vector<Stmt*> statements",
+    "If         : Expr* condition, Stmt* thenBranch, Stmt* elseBranch",
+    "While      : Expr* condition, Stmt* body"
 };
 
 vector<string> retutypes = {

@@ -23,6 +23,8 @@ class Parser {
 
     Expr* expression();
     Expr* assignment();
+    Expr* orr();
+    Expr* aand();
     Expr* equality();
     Expr* comparison();
     Expr* term();
@@ -30,11 +32,14 @@ class Parser {
     Expr* unary();
     Expr* primary();
 
+    Stmt* statement();
     Stmt* declaration();
     Stmt* varDeclaration();
-    Stmt* statement();
     Stmt* printStatements();
     Stmt* expressionStatement();
+    Stmt* ifStatement();
+    Stmt* whileStatement();
+    Stmt* forStatement();
     vector<Stmt*> block();
 
     bool match(vector<TokenType> types);

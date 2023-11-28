@@ -49,3 +49,23 @@ TokenLiteral Block::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor-
 }
 
 
+If::If(Expr* condition, Stmt* thenBranch, Stmt* elseBranch)
+     : condition(condition),thenBranch(thenBranch),elseBranch(elseBranch) {}
+
+string If::acceptstring(VisitorStmt *visitor) {   return visitor->visitIfstring(*this);
+}
+
+TokenLiteral If::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitIfTokenLiteral(*this);
+}
+
+
+While::While(Expr* condition, Stmt* body)
+     : condition(condition),body(body) {}
+
+string While::acceptstring(VisitorStmt *visitor) {   return visitor->visitWhilestring(*this);
+}
+
+TokenLiteral While::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitWhileTokenLiteral(*this);
+}
+
+

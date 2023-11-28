@@ -26,10 +26,7 @@ void Environment::define(string name, TokenLiteral value) {
 }
 
 void Environment::assign(Token name, TokenLiteral value) {
-    if (values.count(name.lexeme) <= 0) {
-        values.insert({name.lexeme, value});
-        return;
-    } else if (values.count(name.lexeme) > 0) {
+    if (values.count(name.lexeme) > 0) {
         values.find(name.lexeme)->second = value;
         return;
     }

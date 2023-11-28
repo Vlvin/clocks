@@ -39,6 +39,16 @@ TokenLiteral Literal::acceptTokenLiteral(VisitorExpr *visitor) {   return visito
 }
 
 
+Logical::Logical(Expr* left, Token oper, Expr* right)
+     : left(left),oper(oper),right(right) {}
+
+string Logical::acceptstring(VisitorExpr *visitor) {   return visitor->visitLogicalstring(*this);
+}
+
+TokenLiteral Logical::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitLogicalTokenLiteral(*this);
+}
+
+
 Unary::Unary(Token oper, Expr* right)
      : oper(oper),right(right) {}
 

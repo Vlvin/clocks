@@ -64,3 +64,26 @@ public:
 
 };
 
+class If : public Stmt {
+public:
+   Expr* condition;
+   Stmt* thenBranch;
+   Stmt* elseBranch;
+   If(Expr* condition, Stmt* thenBranch, Stmt* elseBranch);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+
+class While : public Stmt {
+public:
+   Expr* condition;
+   Stmt* body;
+   While(Expr* condition, Stmt* body);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+
