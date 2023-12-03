@@ -5,7 +5,6 @@ Main
 .vscode/tasks.json
 .vscode/settings.json
 ast
-headers/Expr.h
 a.out
 lox
 cases
