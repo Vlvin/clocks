@@ -30,6 +30,11 @@ void Environment::assign(Token name, TokenLiteral value) {
         values.find(name.lexeme)->second = value;
         return;
     }
+    if (enclosing != NULL) {
+        enclosing->assign(name, value);
+        return;
+    }
+
 
     throw RuntimeException(name, "Undefined variable '" + name.lexeme + "'.");
 }
