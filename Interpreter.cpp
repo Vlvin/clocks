@@ -14,6 +14,7 @@
 #include "headers/Interpreter.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
+string Interpreter::visitCallstring(Call &expr) { return ""; }
 string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitLogicalstring(Logical &expr) { return ""; }
@@ -113,6 +114,19 @@ TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
             
     }
     return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
+    TokenLiteral callee = evaluate(expr.callee);
+
+    vector<TokenLiteral> arguments = {};
+    for (Expr* argument: expr.arguments) {
+        arguments.push_back(evaluate(argument));
+    }
+
+    // LoxCallable* function = callee.toCallable();
+    // return function.call(this, arguments); 
+    
 }
 
 TokenLiteral Interpreter::visitGroupingTokenLiteral(Grouping &expr) {

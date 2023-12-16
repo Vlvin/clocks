@@ -9,6 +9,7 @@ using namespace std;
 class TokenLiteral {
     double d;
     string s;
+    // you need LoxCallable here as a new type of var
 public:
     enum lType {
         NUMBER,

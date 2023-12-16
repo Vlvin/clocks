@@ -4,15 +4,16 @@
 #include <string>
 #include <vector>
 
+#include "TokenLiteral.h"
 #include "Clockswork.h"
 #include "Expr.h"
 #include "Stmt.h"
-#include "Token.h"
-#include "TokenLiteral.h"
-#include "TokenType.h"
 #include "VisitorExpr.h"
 #include "VisitorStmt.h"
+#include "Token.h"
+#include "TokenType.h"
 #include "Environment.h"
+
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
 
@@ -33,6 +34,7 @@ public:
     void executeBlock(vector<Stmt*> statements, Environment *environment);
 
     virtual string visitBinarystring(Binary &expr) override;
+    virtual string visitCallstring(Call &expr) override;
     virtual string visitGroupingstring(Grouping &expr) override;
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
@@ -48,6 +50,7 @@ public:
     virtual string visitWhilestring(While &stmt) override;
 
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
+    virtual TokenLiteral visitCallTokenLiteral(Call &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;

@@ -312,9 +312,43 @@ Expr* Parser::unary() {
         return new Unary(oper, right);
     }
 
-    return primary();
+    return call();
 }
 
+Expr* Parser::call() {
+    Expr* expr = primary();
+    while (true) {
+        if (match({LEFT_PAREN})) {
+            expr = finishCall(expr);
+        } else {
+            break;
+        }
+    }
+
+    return expr;
+}
+
+Expr* Parser::finishCall(Expr* callee) {
+    vector<Expr*> arguments = {};
+    if (!check(RIGHT_PAREN)) {
+        do {
+            if (arguments.size() >= 253) {
+                error(
+                    peek(),
+                    "Can't have more than 253 arguments."
+                );
+            }
+            arguments.push_back(expression());
+        } while(match({COMMA}));
+    }
+
+    Token paren = consume(
+        RIGHT_PAREN,
+        "Expect ')' after arguments.");
+    
+    return new Call(callee, paren, arguments);
+}
+ 
 Expr* Parser::primary() {
     if (match({FALSE})) return new Literal(TokenLiteral(false));
     if (match({TRUE})) return new Literal(TokenLiteral(true));

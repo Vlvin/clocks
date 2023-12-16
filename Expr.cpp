@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+using namespace std; 
 
 #include "headers/Token.h"
 #include "headers/Expr.h"
@@ -16,6 +16,16 @@ string Binary::acceptstring(VisitorExpr *visitor) {   return visitor->visitBinar
 }
 
 TokenLiteral Binary::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitBinaryTokenLiteral(*this);
+}
+
+
+Call::Call(Expr* callee, Token paren, vector<Expr*> arguments)
+     : callee(callee),paren(paren),arguments(arguments) {}
+
+string Call::acceptstring(VisitorExpr *visitor) {   return visitor->visitCallstring(*this);
+}
+
+TokenLiteral Call::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitCallTokenLiteral(*this);
 }
 
 

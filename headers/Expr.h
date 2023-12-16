@@ -35,6 +35,18 @@ public:
 
 };
 
+class Call : public Expr {
+public:
+   Expr* callee;
+   Token paren;
+   vector<Expr*> arguments;
+   Call(Expr* callee, Token paren, vector<Expr*> arguments);
+
+   string acceptstring(VisitorExpr *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorExpr *visitor);
+
+};
+
 class Grouping : public Expr {
 public:
    Expr* expr;

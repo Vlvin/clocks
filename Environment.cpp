@@ -2,14 +2,9 @@
 #include <string>
 #include <map>
 
-#include "headers/Clockswork.h"
-#include "headers/Expr.h"
-#include "headers/Stmt.h"
+#include "headers/Clockswork.h" 
 #include "headers/Token.h"
 #include "headers/TokenLiteral.h"
-#include "headers/TokenType.h"
-#include "headers/VisitorExpr.h"
-#include "headers/VisitorStmt.h"
 #include "headers/Environment.h"
 
 using namespace std;

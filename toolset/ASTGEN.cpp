@@ -10,6 +10,7 @@ using namespace PyUtils;
 
 vector<string> exprtypes = {
     "Binary   : Expr* left, Token oper, Expr* right",
+    "Call     : Expr* callee, Token paren, vector<Expr*> arguments",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
     "Logical  : Expr* left, Token oper, Expr* right",
