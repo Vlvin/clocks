@@ -1,5 +1,9 @@
+// USAGE OF RESERVED NAMES
+// IN VAR AND FUN NAMES
+// IS USUAL CAUSE OF CANCER
+
 fun per(a) {
     print a;
 }
 
-per(5);
+print per;

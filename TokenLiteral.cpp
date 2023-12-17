@@ -29,6 +29,8 @@ string TokenLiteral::toString() {
             return s;
         case TokenLiteral::BOOLEAN:
             return ((d == 1) ? "true" : "false");
+        case TokenLiteral::CALLABLE:
+            return lc->toString();
     }
     return "nil";
 }
