@@ -12,6 +12,7 @@
 #include "headers/VisitorStmt.h"
 #include "headers/Environment.h"
 #include "headers/Interpreter.h"
+#include "headers/LoxCallable.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitCallstring(Call &expr) { return ""; }
@@ -28,6 +29,9 @@ string Interpreter::visitVarstring(Var &stmt) { return ""; }
 string Interpreter::visitBlockstring(Block &stmt) { return ""; }
 string Interpreter::visitIfstring(If &stmt) { return ""; }
 string Interpreter::visitWhilestring(While &stmt) { return ""; }
+
+Interpreter::Interpreter() {
+}
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
     return expr->acceptTokenLiteral(this);
@@ -124,8 +128,20 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
         arguments.push_back(evaluate(argument));
     }
 
-    // LoxCallable* function = callee.toCallable();
-    // return function.call(this, arguments); 
+    LoxCallable* function = callee.toCallable();
+    if (function == nullptr) {
+        throw new RuntimeException(expr.paren, "Can only call functions and classes.");
+    }
+    if (arguments.size() != function->arity()) {
+        throw new RuntimeException(
+            expr.paren, 
+            "Expected " 
+            + to_string(function->arity())
+            + " arguments but got " 
+            + to_string(arguments.size()) 
+            + ".");
+    }
+    return function->call(this, arguments); 
     
 }
 

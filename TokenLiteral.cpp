@@ -5,17 +5,21 @@
 using namespace std;
 
 #include "headers/TokenLiteral.h"
+#include "headers/LoxCallable.h"
 
-TokenLiteral::TokenLiteral() : d(), s(), type(TokenLiteral::NIL) {}
-
-
-TokenLiteral::TokenLiteral(double d) : d(d), s(), type(TokenLiteral::NUMBER) {}
+TokenLiteral::TokenLiteral() : d(), s(), lc(), type(TokenLiteral::NIL) {}
 
 
-TokenLiteral::TokenLiteral(string s) : d(), s(s), type(TokenLiteral::STRING) {}
+TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), type(TokenLiteral::NUMBER) {}
 
 
-TokenLiteral::TokenLiteral(bool b) : d(b), s(), type(TokenLiteral::BOOLEAN) {}
+TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), type(TokenLiteral::STRING) {}
+
+
+TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), type(TokenLiteral::CALLABLE) {}
+
+
+TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), type(TokenLiteral::BOOLEAN) {}
 
 string TokenLiteral::toString() {
     switch (type) {
@@ -33,13 +37,19 @@ double TokenLiteral::toNumber() {
     switch (type) {
         case TokenLiteral::NUMBER:
             return d;
-        case TokenLiteral::STRING:
-            return NULL;
         case TokenLiteral::BOOLEAN:
             return d;
     }
     return NULL;
 
+}
+
+LoxCallable* TokenLiteral::toCallable() {
+    switch(type) {
+        case TokenLiteral::CALLABLE:
+            return lc;
+    }
+    return nullptr;
 }
 
 bool TokenLiteral::equals(TokenLiteral other) {

@@ -14,10 +14,13 @@
 #include "TokenType.h"
 #include "Environment.h"
 
+class LoxCallable;
+
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
 
-    Environment *environment = new Environment();
+    Environment *globals = new Environment();
+    Environment *environment = globals;
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -28,6 +31,7 @@ class Interpreter : public VisitorExpr, public VisitorStmt {
     void checkNumberOperand(Token oper, TokenLiteral operand);
     void checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right);
 public:
+    Interpreter();
 
     void interpret(vector<Stmt*> statements);
     void interpret(Expr* expr);
