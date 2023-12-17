@@ -20,7 +20,7 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
     }
 
     interpreter->executeBlock(declaration.body, environment);
-    return TokenLiteral();
+    return TokenLiteral(); 
 }
 
 string LoxFunction::toString() {

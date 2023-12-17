@@ -18,7 +18,10 @@ class LoxCallable;
 
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
-
+public:
+    Environment *globals = new Environment();
+private:
+    Environment *environment = globals;
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -29,8 +32,6 @@ class Interpreter : public VisitorExpr, public VisitorStmt {
     void checkNumberOperand(Token oper, TokenLiteral operand);
     void checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right);
 public:
-    Environment *globals = new Environment();
-    Environment *environment = globals;
     Interpreter();
 
     void interpret(vector<Stmt*> statements);

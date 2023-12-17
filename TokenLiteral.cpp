@@ -43,7 +43,6 @@ double TokenLiteral::toNumber() {
             return d;
     }
     return NULL;
-
 }
 
 LoxCallable* TokenLiteral::toCallable() {

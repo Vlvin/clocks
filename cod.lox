@@ -2,8 +2,4 @@
 // IN VAR AND FUN NAMES
 // IS USUAL CAUSE OF CANCER
 
-fun per(a) {
-    print a;
-}
-
-print per;
+print clock();

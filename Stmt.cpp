@@ -13,7 +13,7 @@ Expression::Expression(Expr* expression)
      : expression(expression) {}
 
 string Expression::acceptstring(VisitorStmt *visitor) {   return visitor->visitExpressionstring(*this);
-}
+} 
 
 TokenLiteral Expression::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitExpressionTokenLiteral(*this);
 }

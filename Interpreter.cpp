@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sys/time.h>
 
+#include "headers/Standart.h"
 #include "headers/Clockswork.h"
 #include "headers/Expr.h"
 #include "headers/Stmt.h"
@@ -33,6 +35,10 @@ string Interpreter::visitIfstring(If &stmt) { return ""; }
 string Interpreter::visitWhilestring(While &stmt) { return ""; }
 
 Interpreter::Interpreter() {
+    globals->define(
+        "clock",
+        TokenLiteral(new LoxClock())
+    );
 }
 
 TokenLiteral Interpreter::evaluate(Expr* expr) {

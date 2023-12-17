@@ -109,7 +109,7 @@ Stmt* Parser::varDeclaration() {
     Expr* initializer = NULL;
     if (match({EQUAL})) {
         initializer = expression();
-    }
+    } 
 
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Var(name, initializer);
