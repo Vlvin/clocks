@@ -13,6 +13,7 @@
 #include "headers/Environment.h"
 #include "headers/Interpreter.h"
 #include "headers/LoxCallable.h"
+#include "headers/LoxFunction.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitCallstring(Call &expr) { return ""; }
@@ -24,6 +25,7 @@ string Interpreter::visitVariablestring(Variable &expr){ return ""; }
 string Interpreter::visitAssignstring(Assign& expr){ return "";}
 
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
+string Interpreter::visitFunctionstring(Function &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
 string Interpreter::visitVarstring(Var &stmt) { return ""; }
 string Interpreter::visitBlockstring(Block &stmt) { return ""; }
@@ -181,6 +183,12 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
 
 TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
     return environment->get(expr.name);
+}
+
+TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
+    LoxFunction *function = new LoxFunction(stmt);
+    environment->define(stmt.name.lexeme, TokenLiteral(function));
+    return TokenLiteral();
 }
 
 TokenLiteral Interpreter::visitAssignTokenLiteral(Assign &expr) {

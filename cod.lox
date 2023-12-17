@@ -1,5 +1,5 @@
-var a = 0;
-for (;a < 10;) {
-    a = a + 1;
+fun per(a) {
     print a;
 }
+
+per(5);

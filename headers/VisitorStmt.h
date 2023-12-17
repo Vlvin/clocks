@@ -11,6 +11,7 @@ using namespace std;
 #include "Stmt.h"
 
 class Expression;
+class Function;
 class Print;
 class Var;
 class Block;
@@ -20,6 +21,7 @@ class While;
 class VisitorStmt {
 public:
    virtual string visitExpressionstring(Expression &stmt) = 0;
+   virtual string visitFunctionstring(Function &stmt) = 0;
    virtual string visitPrintstring(Print &stmt) = 0;
    virtual string visitVarstring(Var &stmt) = 0;
    virtual string visitBlockstring(Block &stmt) = 0;
@@ -27,6 +29,7 @@ public:
    virtual string visitWhilestring(While &stmt) = 0;
 
    virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) = 0;
+   virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) = 0;
    virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) = 0;
    virtual TokenLiteral visitVarTokenLiteral(Var &stmt) = 0;
    virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) = 0;

@@ -19,8 +19,6 @@ class LoxCallable;
 
 class Interpreter : public VisitorExpr, public VisitorStmt {
 
-    Environment *globals = new Environment();
-    Environment *environment = globals;
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -31,6 +29,8 @@ class Interpreter : public VisitorExpr, public VisitorStmt {
     void checkNumberOperand(Token oper, TokenLiteral operand);
     void checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right);
 public:
+    Environment *globals = new Environment();
+    Environment *environment = globals;
     Interpreter();
 
     void interpret(vector<Stmt*> statements);
@@ -47,6 +47,7 @@ public:
     virtual string visitLogicalstring(Logical &expr) override;
 
     virtual string visitExpressionstring(Expression &stmt) override;
+    virtual string visitFunctionstring(Function &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
     virtual string visitVarstring(Var &stmt) override;
     virtual string visitBlockstring(Block &stmt) override;
@@ -63,6 +64,7 @@ public:
     virtual TokenLiteral visitLogicalTokenLiteral(Logical &expr) override;
 
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
+    virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
     virtual TokenLiteral visitVarTokenLiteral(Var &stmt) override;
     virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) override;

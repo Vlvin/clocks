@@ -33,6 +33,18 @@ public:
 
 };
 
+class Function : public Stmt {
+public:
+   Token name;
+   vector<Token> params;
+   vector<Stmt*> body;
+   Function(Token name, vector<Token> params, vector<Stmt*> body);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+
 class Print : public Stmt {
 public:
    Expr* expression;

@@ -19,6 +19,16 @@ TokenLiteral Expression::acceptTokenLiteral(VisitorStmt *visitor) {   return vis
 }
 
 
+Function::Function(Token name, vector<Token> params, vector<Stmt*> body)
+     : name(name),params(params),body(body) {}
+
+string Function::acceptstring(VisitorStmt *visitor) {   return visitor->visitFunctionstring(*this);
+}
+
+TokenLiteral Function::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitFunctionTokenLiteral(*this);
+}
+
+
 Print::Print(Expr* expression)
      : expression(expression) {}
 

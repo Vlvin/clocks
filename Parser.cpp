@@ -93,6 +93,7 @@ vector<Stmt*> Parser::parse() {
 
 Stmt* Parser::declaration() {
     try {
+        if (match({FUN})) return function("function");
         if (match({VAR})) return varDeclaration();
 
         return statement();
@@ -112,6 +113,28 @@ Stmt* Parser::varDeclaration() {
 
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Var(name, initializer);
+}
+
+Stmt* Parser::function(string kind) {
+    Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    vector<Token> parameters = {};
+    if (!check(RIGHT_PAREN)) {
+        do {
+            if (parameters.size() >= 253) {
+                error(peek(), "Can't have more than 253 parameters.");
+            }
+            parameters.push_back(
+                consume(IDENTIFIER, "Expect parameter name.")
+            );
+        } while (match({COMMA}));
+    }
+    consume(RIGHT_PAREN, "Expected ')' after parameters");
+
+    consume(LEFT_BRACE, "Expect '{' before " + kind + " body");
+    vector<Stmt*> body = block();
+    return new Function(name, parameters, body);
 }
 
 Stmt* Parser::statement() {

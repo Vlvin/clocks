@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-using namespace std; 
+using namespace std;
 
 #include "headers/Token.h"
 #include "headers/Expr.h"

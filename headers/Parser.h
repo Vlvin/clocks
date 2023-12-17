@@ -37,6 +37,7 @@ class Parser {
     Stmt* statement();
     Stmt* declaration();
     Stmt* varDeclaration();
+    Stmt* function(string kind);
     Stmt* printStatements();
     Stmt* expressionStatement();
     Stmt* ifStatement();
