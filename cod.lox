@@ -42,3 +42,10 @@ a = (5 + 5 - 5) / 5 * 1; // 1
 // I forgot about lox can CONCAT STRINGS!!
 a = "Hi, " + "dear" + " reader";
 print(a); 
+
+/*
+ * next you can see field 
+ * full of dead functions bodies
+ * but do not give them your attention 
+ * it is OK 
+ */

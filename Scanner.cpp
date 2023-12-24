@@ -159,7 +159,18 @@ void Scanner::scanToken() {
             if (match('/')) {
                 while (peek() != '\n' && !isAtEnd()) advance();
             } else {
-                addToken(SLASH);
+                if (match('*')) {
+                    while (true) {
+                        if (peek() == '\n') line++;
+                        if (isAtEnd()) break;
+                        if ((advance() == '*' && peek() == '/')) {
+                            advance();
+                            break;
+                        }
+                    }
+                } else {
+                    addToken(SLASH);
+                }
             }
             break;
         case ' ':
