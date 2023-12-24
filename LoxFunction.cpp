@@ -14,16 +14,18 @@ LoxFunction::LoxFunction(Function &declaration, Environment *closure)
  
 int LoxFunction::arity() {
     return declaration.params.size();
-}  
+}
 
 TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
-    Environment *environment = new Environment(closure);
+    Environment *LocalEnvironment = new Environment(closure);
     for (int i = 0; i < declaration.params.size(); i++) {
-        environment->define(declaration.params[i].lexeme, arguments[i]);
+        LocalEnvironment->define(declaration.params[i].lexeme, arguments[i]);
     }
     try {
-        interpreter->executeBlock(declaration.body, environment);
+        interpreter->executeBlock(declaration.body, LocalEnvironment);
+        LocalEnvironment->~Environment();
     } catch (TokenLiteral ret) {
+        LocalEnvironment->~Environment();
         return ret;
     }
     return TokenLiteral(); 

@@ -233,7 +233,7 @@ TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
         value = evaluate(stmt.initializer);
     }
 
-    environment->define(stmt.name.lexeme, value);
+    environment->define(stmt.name, value);
     return TokenLiteral();
 }
 
@@ -259,21 +259,25 @@ TokenLiteral Interpreter::visitWhileTokenLiteral(While &stmt) {
     return TokenLiteral();
 }
 
-void Interpreter::executeBlock(vector <Stmt*> statements, Environment *environment) {
+void Interpreter::executeBlock(vector <Stmt*> statements, Environment *TempEnvironment) {
     Environment *previous = this->environment;
     try {
-        this->environment = environment;
+        this->environment = TempEnvironment;
 
         for (Stmt* statement : statements) {
             execute(statement);
         }
     } catch (TokenLiteral tl) {
         this->environment = previous;
+        free(TempEnvironment);
         throw tl;
     } catch (RuntimeException e) {
         this->environment = previous;
+        free(TempEnvironment);
         throw e;
     }
+    this->environment = previous;
+    free(TempEnvironment);
     // finally
 }
 

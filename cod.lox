@@ -15,7 +15,7 @@ fun fibal(prev, next, th, tod) {
 
 
 fun infun() {
-    var i = 5;
+    var i = 0;
     fun inner() {
         i = i + 1;
         print i;
@@ -23,6 +23,15 @@ fun infun() {
     return inner;
 }
 
-fun stringconcat(first, last) {
-    return "hi " + first + " " + last;
+
+fun somef(a) {
+    print clock();
 }
+var a = 5;
+
+fun count(n) {
+    if (n == 0) return n;
+    return count(n-1);
+}
+
+count(4);

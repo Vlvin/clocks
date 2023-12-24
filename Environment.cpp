@@ -19,6 +19,13 @@ Environment::Environment(Environment *enclosing)
 void Environment::define(string name, TokenLiteral value) {
     values.insert({name, value}); 
 }
+
+void Environment::define(Token name, TokenLiteral value) {
+    if (values.count(name.lexeme) > 0)
+        throw RuntimeException(name, "Redefenision of variable '" + name.lexeme + "'.");
+    else
+        values.insert({name.lexeme, value}); 
+}
  
 void Environment::assign(Token name, TokenLiteral value) {
     if (values.count(name.lexeme) > 0) {

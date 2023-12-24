@@ -19,6 +19,7 @@ public:
     Environment (Environment *enclosing);
     Environment *enclosing;
     void define(string name, TokenLiteral value);
+    void define(Token name, TokenLiteral value);
     void assign(Token name, TokenLiteral value);
 
     TokenLiteral get(Token name);
