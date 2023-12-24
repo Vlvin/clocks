@@ -203,7 +203,7 @@ TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
     LoxFunction *function = new LoxFunction(stmt, this->environment);
-    globals->define(stmt.name.lexeme, TokenLiteral(function));
+    globals->define(stmt.name, TokenLiteral(function));
     return TokenLiteral();
 }
 
@@ -306,11 +306,6 @@ void Interpreter::interpret(vector<Stmt*> statements) {
             statement = nullptr;
         }
     } catch (RuntimeException error) {
-        for (Stmt* statement: statements) {
-            if (statement != nullptr)
-                free(statement);
-                statement = nullptr;
-        }
         Clockwork::runtimeError(error);
     }
 }

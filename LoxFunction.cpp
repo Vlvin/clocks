@@ -19,7 +19,7 @@ int LoxFunction::arity() {
 TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
     Environment *LocalEnvironment = new Environment(closure);
     for (int i = 0; i < declaration.params.size(); i++) {
-        LocalEnvironment->define(declaration.params[i].lexeme, arguments[i]);
+        LocalEnvironment->define(declaration.params[i], arguments[i]);
     }
     try {
         interpreter->executeBlock(declaration.body, LocalEnvironment);

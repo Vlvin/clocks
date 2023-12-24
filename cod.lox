@@ -2,36 +2,43 @@
 // IN VAR AND FUN NAMES
 // IS USUAL CAUSE OF CANCER
 
+// list of examples is here
 
-fun fib(n) {
-    if (n <= 1) return n;
-    return (fib(n - 1) + fib(n - 2));
+// lox has dynamic variable definitions and assignments
+var a; // now just nil
+a = "five"; // now it equals "five"
+a = true; // now it equals true
+a = 5; // now it equals 5
+
+// lox still has built in debug print
+dPrint "Hello World!";
+
+// lox has functions
+fun iAmFun(argument) {
+    // and also return statements
+    return 5;
 }
 
-fun fibal(prev, next, th, tod) {
-    if (th >= tod) return prev+next;
-    return fibal(next, prev+next, th+1, tod);
+// lox has built in functions
+print(clock()); // prints seconds
+// and exit(exit code); which will exit this program
+
+// lox has loops
+while(a > 0) {
+    a = a - 1;
 }
+// some syntax sugar
+for (;a < 5; a = a + 1) {}
 
+// lox has conditional operator if
+if (true) a = 1;
+// all this time I was using block
+else a = 0;
 
-fun infun() {
-    var i = 0;
-    fun inner() {
-        i = i + 1;
-        print i;
-    }
-    return inner;
-}
+// and finally lox has expressions
+a = (5 == 5) or ((5 == -5) and false); // true
+a = (5 + 5 - 5) / 5 * 1; // 1
 
-
-fun somef(a) {
-    print clock();
-}
-var a = 5;
-
-fun count(n) {
-    if (n == 0) return n;
-    return count(n-1);
-}
-
-print fib(30);
+// I forgot about lox can CONCAT STRINGS!!
+a = "Hi, " + "dear" + " reader";
+print(a); 

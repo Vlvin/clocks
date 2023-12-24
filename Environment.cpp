@@ -22,7 +22,7 @@ void Environment::define(string name, TokenLiteral value) {
 
 void Environment::define(Token name, TokenLiteral value) {
     if (values.count(name.lexeme) > 0)
-        throw RuntimeException(name, "Redefenision of variable '" + name.lexeme + "'.");
+        throw RuntimeException(name, "Redefenition of variable '" + name.lexeme + "'.");
     else
         values.insert({name.lexeme, value}); 
 }
