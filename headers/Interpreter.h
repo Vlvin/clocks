@@ -20,8 +20,8 @@ class LoxCallable;
 class Interpreter : public VisitorExpr, public VisitorStmt {
 public:
     Environment *globals = new Environment();
-private:
     Environment *environment = globals;
+private:
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
 
@@ -50,6 +50,7 @@ public:
     virtual string visitExpressionstring(Expression &stmt) override;
     virtual string visitFunctionstring(Function &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
+    virtual string visitReturnstring(Return &stmt) override;
     virtual string visitVarstring(Var &stmt) override;
     virtual string visitBlockstring(Block &stmt) override;
     virtual string visitIfstring(If &stmt) override;
@@ -67,6 +68,7 @@ public:
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
     virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
+    virtual TokenLiteral visitReturnTokenLiteral(Return &stmt) override;
     virtual TokenLiteral visitVarTokenLiteral(Var &stmt) override;
     virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) override;
     virtual TokenLiteral visitIfTokenLiteral(If &stmt) override;

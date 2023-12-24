@@ -13,7 +13,7 @@ Expression::Expression(Expr* expression)
      : expression(expression) {}
 
 string Expression::acceptstring(VisitorStmt *visitor) {   return visitor->visitExpressionstring(*this);
-} 
+}
 
 TokenLiteral Expression::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitExpressionTokenLiteral(*this);
 }
@@ -26,6 +26,16 @@ string Function::acceptstring(VisitorStmt *visitor) {   return visitor->visitFun
 }
 
 TokenLiteral Function::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitFunctionTokenLiteral(*this);
+}
+
+
+Return::Return(Token keyword, Expr* value)
+     : keyword(keyword),value(value) {}
+
+string Return::acceptstring(VisitorStmt *visitor) {   return visitor->visitReturnstring(*this);
+}
+
+TokenLiteral Return::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitReturnTokenLiteral(*this);
 }
 
 

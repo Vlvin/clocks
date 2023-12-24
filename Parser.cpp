@@ -138,13 +138,14 @@ Stmt* Parser::function(string kind) {
 }
 
 Stmt* Parser::statement() {
+    if (match({FOR})) return forStatement();
+    if (match({IF})) return ifStatement();
     if (match({PRINT})) return printStatements();
+    if (match({RETURN})) return returnStatement();
+    if (match({WHILE})) return whileStatement();
     if (match({LEFT_BRACE})) {
         return new Block(block());
     }
-    if (match({IF})) return ifStatement();
-    if (match({WHILE})) return whileStatement();
-    if (match({FOR})) return forStatement();
     return expressionStatement();
 }
 
@@ -181,6 +182,16 @@ Stmt* Parser::whileStatement() {
     Stmt* body = statement();
 
     return new While(condition, body);
+}
+
+Stmt* Parser::returnStatement() {
+    Token keyword = previous();
+    Expr* value = NULL;
+    if (!check(SEMICOLON)) {
+        value = expression();
+    }
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Return(keyword, value);
 }
 
 Stmt* Parser::forStatement() {

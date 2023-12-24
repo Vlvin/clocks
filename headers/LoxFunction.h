@@ -10,10 +10,13 @@ using namespace std;
 #include "TokenLiteral.h"
 #include "Stmt.h"
 
+class Environment;
+
 class LoxFunction: public LoxCallable {
     Function &declaration;
+    Environment *closure;
 public:
-    LoxFunction(Function &declaration);
+    LoxFunction(Function &declaration, Environment *closure);
     virtual int arity() override;
     virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) override;
     virtual string toString() override;

@@ -29,6 +29,7 @@ string Interpreter::visitAssignstring(Assign& expr){ return "";}
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitFunctionstring(Function &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
+string Interpreter::visitReturnstring(Return &stmt) { return ""; }
 string Interpreter::visitVarstring(Var &stmt) { return ""; }
 string Interpreter::visitBlockstring(Block &stmt) { return ""; }
 string Interpreter::visitIfstring(If &stmt) { return ""; }
@@ -40,7 +41,7 @@ Interpreter::Interpreter() {
         TokenLiteral(new LoxClock())
     );
 }
-
+ 
 TokenLiteral Interpreter::evaluate(Expr* expr) {
     return expr->acceptTokenLiteral(this);
 }
@@ -118,6 +119,7 @@ TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
             throw RuntimeException(expr.oper, "Operands must be two numbers or two strings.");
         case TokenType::SLASH:
             checkNumberOperands(expr.oper, left, right);
+            if (right.toNumber() == 0) throw RuntimeException(expr.oper, "Division by sero is forbidden.");
             return left.toNumber() / right.toNumber();
         case TokenType::STAR:
             checkNumberOperands(expr.oper, left, right);
@@ -138,10 +140,10 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
 
     LoxCallable* function = callee.toCallable();
     if (function == nullptr) {
-        throw new RuntimeException(expr.paren, "Can only call functions and classes.");
+        throw RuntimeException(expr.paren, "Can only call functions and classes.");
     }
     if (arguments.size() != function->arity()) {
-        throw new RuntimeException(
+        throw RuntimeException(
             expr.paren, 
             "Expected " 
             + to_string(function->arity())
@@ -192,8 +194,8 @@ TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
 }
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
-    LoxFunction *function = new LoxFunction(stmt);
-    environment->define(stmt.name.lexeme, TokenLiteral(function));
+    LoxFunction *function = new LoxFunction(stmt, this->environment);
+    globals->define(stmt.name.lexeme, TokenLiteral(function));
     return TokenLiteral();
 }
 
@@ -210,8 +212,17 @@ TokenLiteral Interpreter::visitExpressionTokenLiteral(Expression &stmt) {
 }
 
 TokenLiteral Interpreter::visitPrintTokenLiteral(Print &stmt) {
-    TokenLiteral value = evaluate(stmt.expression);
-    cout << stringify(value);
+    TokenLiteral value = evaluate(stmt.expression); 
+    cout << stringify(value) << '\n';
+    return TokenLiteral();
+}
+
+TokenLiteral Interpreter::visitReturnTokenLiteral(Return &stmt) {
+    TokenLiteral value = TokenLiteral();
+    if (stmt.value != NULL) { 
+        value = evaluate(stmt.value);
+    }
+    throw value;
     return TokenLiteral();
 }
 
@@ -256,9 +267,14 @@ void Interpreter::executeBlock(vector <Stmt*> statements, Environment *environme
         for (Stmt* statement : statements) {
             execute(statement);
         }
-    } catch (...) {}
+    } catch (TokenLiteral tl) {
+        this->environment = previous;
+        throw tl;
+    } catch (RuntimeException e) {
+        this->environment = previous;
+        throw e;
+    }
     // finally
-    this->environment = previous;
 }
 
 void Interpreter::interpret(Expr *expr) {

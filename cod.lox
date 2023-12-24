@@ -2,4 +2,37 @@
 // IN VAR AND FUN NAMES
 // IS USUAL CAUSE OF CANCER
 
+
+fun fib(n) {
+    if (n <= 1) return n;
+    return (fib(n - 1) + fib(n - 2));
+}
+
+fun fibal(prev, next, th, tod) {
+    if (th >= tod) return prev+next;
+    return fibal(next, prev+next, th+1, tod);
+}
+
 print clock();
+
+fun infun() {
+    var i = 5;
+    fun inner() {
+        i = i + 1;
+        print i;
+    }
+    return inner;
+}
+
+fun stringconcat(first, last) {
+    return "hi " + first + " " + last;
+}
+fib = 0;
+fibal = 0;
+infun = 0;
+stringconcat = 0;
+
+print fib;
+print fibal;
+print infun;
+print stringconcat;

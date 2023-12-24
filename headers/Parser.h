@@ -38,12 +38,13 @@ class Parser {
     Stmt* declaration();
     Stmt* varDeclaration();
     Stmt* function(string kind);
-    Stmt* printStatements();
-    Stmt* expressionStatement();
+    Stmt* forStatement();
     Stmt* ifStatement();
     Stmt* whileStatement();
-    Stmt* forStatement();
+    Stmt* returnStatement();
+    Stmt* printStatements();
     vector<Stmt*> block();
+    Stmt* expressionStatement();
 
     bool match(vector<TokenType> types);
     bool check(TokenType type);

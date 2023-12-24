@@ -45,6 +45,17 @@ public:
 
 };
 
+class Return : public Stmt {
+public:
+   Token keyword;
+   Expr* value;
+   Return(Token keyword, Expr* value);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+
 class Print : public Stmt {
 public:
    Expr* expression;

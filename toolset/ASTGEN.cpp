@@ -23,6 +23,7 @@ vector<string> exprtypes = {
 vector<string> stmtypes = {
     "Expression : Expr* expression",
     "Function   : Token name, vector<Token> params, vector<Stmt*> body",
+    "Return     : Token keyword, Expr* value",
     "Print      : Expr* expression",
     "Var        : Token name, Expr* initializer",
     "Block      : vector<Stmt*> statements",
