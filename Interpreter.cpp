@@ -40,6 +40,14 @@ Interpreter::Interpreter() {
         "clock",
         TokenLiteral(new LoxClock())
     );
+    globals->define(
+        "exit",
+        TokenLiteral(new LoxExit())
+    );
+    globals->define(
+        "print",
+        TokenLiteral(new LoxPrint())
+    );
 }
  
 TokenLiteral Interpreter::evaluate(Expr* expr) {
@@ -294,8 +302,15 @@ void Interpreter::interpret(vector<Stmt*> statements) {
     try {
         for (Stmt* statement: statements) {
             execute(statement);
+            free(statement);
+            statement = nullptr;
         }
     } catch (RuntimeException error) {
+        for (Stmt* statement: statements) {
+            if (statement != nullptr)
+                free(statement);
+                statement = nullptr;
+        }
         Clockwork::runtimeError(error);
     }
 }

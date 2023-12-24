@@ -6,6 +6,7 @@ using namespace std;
 
 #include "headers/TokenLiteral.h"
 #include "headers/LoxCallable.h"
+#include "headers/PyUtils.h"
 
 TokenLiteral::TokenLiteral() : d(), s(), lc(), type(TokenLiteral::NIL) {}
 
@@ -22,9 +23,13 @@ TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), type(TokenLitera
 TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), type(TokenLiteral::BOOLEAN) {}
 
 string TokenLiteral::toString() {
+    string line;
     switch (type) {
         case TokenLiteral::NUMBER:
-            return to_string(d);
+            line = to_string(d);
+            if (PyUtils::endswith(line, ".000000"))
+                line = PyUtils::strrange(line, 0, line.length() - 7);
+            return line;
         case TokenLiteral::STRING:
             return s;
         case TokenLiteral::BOOLEAN:

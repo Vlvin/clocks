@@ -34,4 +34,4 @@ fun count(n) {
     return count(n-1);
 }
 
-count(4);
+print fib(30);

@@ -24,7 +24,7 @@ map<string, TokenType> const Scanner::keywords = {
     {"if",     IF},
     {"nil",    NIL},
     {"or",     OR},
-    {"print",  PRINT},
+    {"dPrint",  PRINT}, // will work even if globals are broken
     {"return", RETURN},
     {"super",  SUPER},
     {"this",   THIS},

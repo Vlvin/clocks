@@ -17,3 +17,23 @@ public:
     }
     virtual string toString() { return "<native fun clock>"; }
 };
+
+class LoxExit : public LoxCallable {
+public:
+    virtual int arity() { return 1; }
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        exit(arguments[0].toNumber());
+        return TokenLiteral();
+    }
+    virtual string toString() { return "<native fun exit>"; }
+};
+
+class LoxPrint : public LoxCallable {
+public:
+    virtual int arity() { return 1; }
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        cout << (arguments[0].toString()) << endl;
+        return TokenLiteral();
+    }
+    virtual string toString() { return "<native fun print>"; }
+};
