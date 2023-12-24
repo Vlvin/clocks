@@ -13,7 +13,6 @@ fun fibal(prev, next, th, tod) {
     return fibal(next, prev+next, th+1, tod);
 }
 
-print clock();
 
 fun infun() {
     var i = 5;
@@ -27,12 +26,3 @@ fun infun() {
 fun stringconcat(first, last) {
     return "hi " + first + " " + last;
 }
-fib = 0;
-fibal = 0;
-infun = 0;
-stringconcat = 0;
-
-print fib;
-print fibal;
-print infun;
-print stringconcat;
