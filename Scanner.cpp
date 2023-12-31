@@ -90,7 +90,7 @@ void Scanner::addToken(TokenType type) {
 
 void Scanner::addToken(TokenType type, TokenLiteral literal) {
     string text = source.substr(start, current-start);
-    tokens.push_back(Token(type, text, literal, line));
+    tokens.push_back(Token(type, text, literal, line)); 
 }
 
 void Scanner::str() {
@@ -177,7 +177,6 @@ void Scanner::scanToken() {
         case '\r':
         case '\t':
             break;
-
         case '\n':
             line++;
             break;

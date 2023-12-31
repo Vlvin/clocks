@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sys/time.h>
+#include <math.h>
 
 #include "headers/Standart.h"
 #include "headers/Clockswork.h"
@@ -48,6 +49,14 @@ Interpreter::Interpreter() {
         "print",
         TokenLiteral(new LoxPrint())
     );
+    globals->define(
+        "PI",
+        TokenLiteral(3.1415926535897932384626433)
+    );
+    globals->define(
+        "E",
+        TokenLiteral(2.71828182845904523536028747135266249775724709369995)
+    );
 }
  
 TokenLiteral Interpreter::evaluate(Expr* expr) {
@@ -67,7 +76,6 @@ string Interpreter::stringify(TokenLiteral literal) {
         }
         return text;
     }
-
     return literal.toString();
 }
 
@@ -132,8 +140,6 @@ TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
         case TokenType::STAR:
             checkNumberOperands(expr.oper, left, right);
             return left.toNumber() * right.toNumber();
-
-            
     }
     return TokenLiteral();
 }
@@ -150,11 +156,20 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
     if (function == nullptr) {
         throw RuntimeException(expr.paren, "Can only call functions and classes.");
     }
-    if (arguments.size() != function->arity()) {
+    if ((arguments.size() != function->arity()) && (function->arity() >= 0)) {
         throw RuntimeException(
             expr.paren, 
             "Expected " 
             + to_string(function->arity())
+            + " arguments but got " 
+            + to_string(arguments.size()) 
+            + ".");
+    }
+    if ((arguments.size() > function->arity()) && (function->arity() < 0)) {
+        throw RuntimeException(
+            expr.paren, 
+            "Expected not more than " 
+            + to_string(-function->arity())
             + " arguments but got " 
             + to_string(arguments.size()) 
             + ".");
@@ -203,7 +218,7 @@ TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
     LoxFunction *function = new LoxFunction(stmt, this->environment);
-    globals->define(stmt.name, TokenLiteral(function));
+    environment->define(stmt.name, TokenLiteral(function));
     return TokenLiteral();
 }
 
@@ -275,17 +290,17 @@ void Interpreter::executeBlock(vector <Stmt*> statements, Environment *TempEnvir
         for (Stmt* statement : statements) {
             execute(statement);
         }
+        delete this->environment;
     } catch (TokenLiteral tl) {
+        delete this->environment;
         this->environment = previous;
-        free(TempEnvironment);
         throw tl;
     } catch (RuntimeException e) {
+        delete this->environment;
         this->environment = previous;
-        free(TempEnvironment);
         throw e;
     }
     this->environment = previous;
-    free(TempEnvironment);
     // finally
 }
 

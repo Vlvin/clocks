@@ -14,7 +14,7 @@ void Clockwork::error(int line, string message) {
 }
 
 void Clockwork::error(Token token, string message) {
-    if (token.type = T_EOF) {
+    if (token.type == T_EOF) {
         report(token.line, " at end ", message);
     } else {
         report(token.line, " at '" + token.lexeme + "' ", message);

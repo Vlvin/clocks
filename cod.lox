@@ -4,6 +4,7 @@
 
 // list of examples is here
 
+/*
 // lox has dynamic variable definitions and assignments
 var a; // now just nil
 a = "five"; // now it equals "five"
@@ -43,9 +44,12 @@ a = (5 + 5 - 5) / 5 * 1; // 1
 a = "Hi, " + "dear" + " reader";
 print(a); 
 
-/*
  * next you can see field 
  * full of dead functions bodies
  * but do not give them your attention 
  * it is OK 
  */
+fun fib(n) { if (n <= 1) {return n;} return (fib(n-1) + fib(n-2)); }
+print(fib(30));
+
+

@@ -39,7 +39,6 @@ void Parser::synchronize() {
                 case RETURN:
                     return;
             }
-
             advance();
         }
     }
@@ -343,7 +342,7 @@ Expr* Parser::unary() {
     if (match({BANG, MINUS})) {
         Token oper = previous();
         Expr* right = unary();
-        return new Unary(oper, right);
+        return new Unary(oper, right); 
     }
 
     return call();

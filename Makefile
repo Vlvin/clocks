@@ -10,6 +10,10 @@ buildonly:
 	make ast
 	make lox
 
+buildoptimizes: Main.cpp $(Locals)
+	make ast
+	g++ $^ -o lox -O2
+
 builddebug: Main.cpp $(Locals)
 	make ast
 	g++ $^ -o lox -g

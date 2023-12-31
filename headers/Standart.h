@@ -5,6 +5,7 @@
 using namespace std;
 
 #include "LoxCallable.h"
+#include "Clockswork.h"
 
 class LoxClock : public LoxCallable {
 public:
@@ -20,8 +21,10 @@ public:
 
 class LoxExit : public LoxCallable {
 public:
-    virtual int arity() { return 1; }
+    virtual int arity() { return -1; }
     virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        if (arguments.size() == 0)
+            exit(0);
         exit(arguments[0].toNumber());
         return TokenLiteral();
     }
@@ -30,9 +33,14 @@ public:
 
 class LoxPrint : public LoxCallable {
 public:
-    virtual int arity() { return 1; }
+    virtual int arity() { return -253; } // admin option "any number of arguments"
     virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
-        cout << (arguments[0].toString()) << endl;
+        string line = "";
+        for (TokenLiteral argument: arguments) {
+            line += argument.toString() + " ";
+        }
+        line = line.substr(0, line.length()-1);
+        cout << line << endl;
         return TokenLiteral();
     }
     virtual string toString() { return "<native fun print>"; }
