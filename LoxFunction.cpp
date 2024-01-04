@@ -23,10 +23,8 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
     }
     try {
         interpreter->executeBlock(declaration.body, LocalEnvironment);
-        // delete LocalEnvironment;
     } catch (TokenLiteral ret) {
         if (ret.toCallable() == nullptr)
-            // delete LocalEnvironment;
         return ret;
     }
     return TokenLiteral(); 

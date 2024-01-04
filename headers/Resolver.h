@@ -3,6 +3,7 @@
 #include "VisitorExpr.h"
 #include "VisitorStmt.h"
 #include "TokenLiteral.h"
+#include "Clockswork.h"
 #include "Interpreter.h"
 
 #include <vector>
@@ -14,12 +15,24 @@ using namespace std;
 
 class Resolver: public VisitorExpr, public VisitorStmt {
 
+
+    enum FunctionType {
+        NONE,
+        FUNCTION
+    };
+    FunctionType currentFunction = FunctionType::NONE;
+
     Interpreter* interpreter;
     void resolve(Stmt* stmt);
     void resolve(Expr* expr);
+    void resolveLocal(Expr* expr, Token name);
+    void resolveFunction(Function& function, FunctionType type);
     void beginScope();
     void endScope();
-    stack<map<string, bool>> scopes;
+    void declare(Token name);
+    void define(Token name);
+    vector<map<string, bool>> scopes;
+
 public:
     void resolve(vector<Stmt*> statements);
     Resolver(Interpreter *interpreter);

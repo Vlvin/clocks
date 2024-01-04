@@ -98,14 +98,14 @@ Stmt* Parser::declaration() {
         return statement();
     } catch (ParseError error) {
         synchronize();
-        return NULL;
+        return nullptr;
     }
 }
 
 Stmt* Parser::varDeclaration() {
     Token name = consume(IDENTIFIER, "Expect variable name");
 
-    Expr* initializer = NULL;
+    Expr* initializer = nullptr;
     if (match({EQUAL})) {
         initializer = expression();
     } 
@@ -166,7 +166,7 @@ Stmt* Parser::ifStatement() {
     consume(RIGHT_PAREN, "Expect ')' after if condition.");
 
     Stmt *thenBranch = statement();
-    Stmt *elseBranch = NULL;
+    Stmt *elseBranch = nullptr;
     if (match({ELSE})) {
         elseBranch = statement();
     }
@@ -185,7 +185,7 @@ Stmt* Parser::whileStatement() {
 
 Stmt* Parser::returnStatement() {
     Token keyword = previous();
-    Expr* value = NULL;
+    Expr* value = nullptr;
     if (!check(SEMICOLON)) {
         value = expression();
     }
@@ -198,20 +198,20 @@ Stmt* Parser::forStatement() {
 
     Stmt* initializer;
     if (match({SEMICOLON})) {
-        initializer = NULL;
+        initializer = nullptr;
     } else if (match({VAR})) {
         initializer = varDeclaration();
     } else {
         initializer = expressionStatement();
     }
 
-    Expr* condition = NULL;
+    Expr* condition = nullptr;
     if (!check(SEMICOLON)) {
         condition = expression();
     }
     consume(SEMICOLON, "Expect ';' after loop condition.");
 
-    Expr* increment = NULL;
+    Expr* increment = nullptr;
     if (!check(RIGHT_PAREN)) {
         increment = expression();
     }
@@ -219,15 +219,15 @@ Stmt* Parser::forStatement() {
     
     Stmt* body = statement();
 
-    if (increment != NULL) {
+    if (increment != nullptr) {
         body = new Block({body,
                             new Expression(increment)});
     }
 
-    if (condition == NULL) condition = new Literal(true);
+    if (condition == nullptr) condition = new Literal(true);
     body = new While(condition, body);
 
-    if (initializer != NULL) {
+    if (initializer != nullptr) {
         body = new Block({initializer, body});
     }
 

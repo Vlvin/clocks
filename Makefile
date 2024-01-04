@@ -1,4 +1,4 @@
-Locals = Environment.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp LoxFunction.cpp
+Locals = Resolver.cpp Environment.cpp Interpreter.cpp Scanner.cpp ASTPrinter.cpp Clockswork.cpp Stmt.cpp Expr.cpp Parser.cpp Token.cpp TokenLiteral.cpp LoxFunction.cpp
 Flags = -Wno-pointer-arith -Wno-conversion-null
 
 all:

@@ -67,6 +67,18 @@ TokenLiteral Interpreter::execute(Stmt* statement) {
     return statement->acceptTokenLiteral(this);
 }
 
+TokenLiteral Interpreter::lookUpVariable(Token name, Expr* expr) {
+    
+    int distance = locals.find(expr)->second; 
+
+    if (locals.count(expr) > 0) {
+        return environment->getAt(distance, name.lexeme);
+    } else {
+        return globals->get(name);
+    }
+
+}
+
 string Interpreter::stringify(TokenLiteral literal) {
     if (literal.type == TokenLiteral::NIL) return "nil";
     if (literal.type == TokenLiteral::NUMBER) {
@@ -213,7 +225,7 @@ TokenLiteral Interpreter::visitUnaryTokenLiteral(Unary &expr) {
 }
 
 TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
-    return environment->get(expr.name);
+    return lookUpVariable(expr.name, &expr);
 }
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
@@ -224,7 +236,12 @@ TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
 
 TokenLiteral Interpreter::visitAssignTokenLiteral(Assign &expr) {
     TokenLiteral value = evaluate(expr.value);
-    environment->assign(expr.name, value);
+    int distance = locals.find(&expr)->second;
+    if (locals.count(&expr) > 0) {
+        environment->assignAt(distance, expr.name, value);
+    } else {
+        globals->assign(expr.name, value);
+    }
     return value;
 }
 
@@ -302,6 +319,10 @@ void Interpreter::executeBlock(vector <Stmt*> statements, Environment *TempEnvir
     }
     this->environment = previous;
     // finally
+}
+
+void Interpreter::resolve(Expr* expr, int depth) {
+        locals.insert({expr, depth});
 }
 
 void Interpreter::interpret(Expr *expr) {

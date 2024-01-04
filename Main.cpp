@@ -20,6 +20,7 @@ using namespace std;
 #include "headers/Parser.h" 
 #include "headers/ASTPrinter.h"
 #include "headers/Interpreter.h"
+#include "headers/Resolver.h"
 
 static Interpreter interpreter = Interpreter();
 void run(string source) {
@@ -35,7 +36,10 @@ void run(string source) {
 
 
     if (Clockwork::hadError) return;
-    
+
+    Resolver resolver(&interpreter);
+    resolver.resolve(statements);    
+    if (Clockwork::hadError) return;
     interpreter.interpret(statements);
 }
 

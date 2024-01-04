@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "TokenLiteral.h"
 #include "Clockswork.h"
@@ -22,8 +23,10 @@ public:
     Environment *globals = new Environment();
     Environment *environment = globals;
 private:
+    map<Expr*, int> locals = {};
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
+    TokenLiteral lookUpVariable(Token name, Expr* expr);
 
     string stringify(TokenLiteral literal);
 
@@ -33,7 +36,8 @@ private:
     void checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right);
 public:
     Interpreter();
-
+    
+    void resolve(Expr* expr, int depth);
     void interpret(vector<Stmt*> statements);
     void interpret(Expr* expr);
     void executeBlock(vector<Stmt*> statements, Environment *environment);
