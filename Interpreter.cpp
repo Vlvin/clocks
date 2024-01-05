@@ -187,7 +187,6 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
             + ".");
     }
     return function->call(this, arguments); 
-    
 }
 
 TokenLiteral Interpreter::visitGroupingTokenLiteral(Grouping &expr) {
@@ -262,8 +261,7 @@ TokenLiteral Interpreter::visitReturnTokenLiteral(Return &stmt) {
     if (stmt.value != NULL) { 
         value = evaluate(stmt.value);
     }
-    throw value;
-    return TokenLiteral();
+    return TokenLiteral(value, true);
 }
 
 TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
@@ -278,46 +276,53 @@ TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
 }
 
 TokenLiteral Interpreter::visitBlockTokenLiteral(Block &stmt) {
-    executeBlock(stmt.statements, new Environment(environment));
-    return TokenLiteral();
+    return executeBlock(stmt.statements, new Environment(environment));
 }
 
 TokenLiteral Interpreter::visitIfTokenLiteral(If& stmt) {
+    TokenLiteral value;
     if (isTruthy(evaluate(stmt.condition))) {
-        execute(stmt.thenBranch);
+        value = execute(stmt.thenBranch);
     } else if (stmt.elseBranch != NULL) {
-        execute(stmt.elseBranch);
+        value = execute(stmt.elseBranch);
     }
+    if (value.isReturn) return value;
     return TokenLiteral();
 }
 
 TokenLiteral Interpreter::visitWhileTokenLiteral(While &stmt) {
+    TokenLiteral value;
     while(isTruthy(evaluate(stmt.condition))) {
-        execute(stmt.body);
+        value = execute(stmt.body);
+        if (value.isReturn) break;
     }
 
+    if (value.isReturn) return value;
     return TokenLiteral();
 }
 
-void Interpreter::executeBlock(vector <Stmt*> statements, Environment *TempEnvironment) {
+TokenLiteral Interpreter::executeBlock(vector <Stmt*> statements, Environment *TempEnvironment) {
     Environment *previous = this->environment;
+    TokenLiteral value;
+    bool isReturn = false;
     try {
         this->environment = TempEnvironment;
 
         for (Stmt* statement : statements) {
-            execute(statement);
+            value = execute(statement);
+            if (value.isReturn) {
+                break;
+            }
         }
         delete this->environment;
-    } catch (TokenLiteral tl) {
-        delete this->environment;
-        this->environment = previous;
-        throw tl;
     } catch (RuntimeException e) {
         delete this->environment;
         this->environment = previous;
         throw e;
     }
     this->environment = previous;
+    if (value.isReturn) return value;
+    return TokenLiteral();
     // finally
 }
 

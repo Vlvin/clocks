@@ -23,6 +23,7 @@ public:
     Environment *globals = new Environment();
     Environment *environment = globals;
 private:
+    vector<int> functionDistance = {};
     map<Expr*, int> locals = {};
     TokenLiteral evaluate(Expr *expr);
     TokenLiteral execute(Stmt *statement);
@@ -40,7 +41,7 @@ public:
     void resolve(Expr* expr, int depth);
     void interpret(vector<Stmt*> statements);
     void interpret(Expr* expr);
-    void executeBlock(vector<Stmt*> statements, Environment *environment);
+    TokenLiteral executeBlock(vector<Stmt*> statements, Environment *environment);
 
     virtual string visitBinarystring(Binary &expr) override;
     virtual string visitCallstring(Call &expr) override;

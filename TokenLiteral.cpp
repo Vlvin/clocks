@@ -8,19 +8,36 @@ using namespace std;
 #include "headers/LoxCallable.h"
 #include "headers/PyUtils.h"
 
-TokenLiteral::TokenLiteral() : d(), s(), lc(), type(TokenLiteral::NIL) {}
+TokenLiteral::TokenLiteral() : d(), s(), lc(), type(TokenLiteral::NIL), isReturn(false) {}
 
 
-TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), type(TokenLiteral::NUMBER) {}
+TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), type(TokenLiteral::NUMBER), isReturn(false) {}
 
 
-TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), type(TokenLiteral::STRING) {}
+TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), type(TokenLiteral::STRING), isReturn(false) {}
 
 
-TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), type(TokenLiteral::CALLABLE) {}
+TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), type(TokenLiteral::CALLABLE), isReturn(false) {}
 
 
-TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), type(TokenLiteral::BOOLEAN) {}
+TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), type(TokenLiteral::BOOLEAN), isReturn(false) {}
+
+TokenLiteral::TokenLiteral(TokenLiteral tl, bool isReturn) : type(tl.type), isReturn(isReturn) {
+    switch (tl.type) {
+        case NUMBER:
+        case BOOLEAN:
+            d = tl.d;
+            break;
+        case STRING:
+            s = tl.s;
+            break;
+        case CALLABLE:
+            lc = tl.lc;
+            break;
+        case NIL:
+            break;
+    }
+}
 
 string TokenLiteral::toString() {
     string line;

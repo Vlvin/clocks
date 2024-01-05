@@ -14,6 +14,7 @@ class TokenLiteral {
     LoxCallable* lc;
     // you need LoxCallable here as a new type of var
 public:
+    bool isReturn;
     enum lType {
         NUMBER,
         STRING,
@@ -29,6 +30,7 @@ public:
     TokenLiteral(string s);
     TokenLiteral(LoxCallable* lc);
     TokenLiteral(bool b);
+    TokenLiteral(TokenLiteral tl, bool isReturn);
 
     LoxCallable* toCallable();
     string toString();

@@ -21,13 +21,7 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
     for (int i = 0; i < declaration.params.size(); i++) {
         LocalEnvironment->define(declaration.params[i], arguments[i]);
     }
-    try {
-        interpreter->executeBlock(declaration.body, LocalEnvironment);
-    } catch (TokenLiteral ret) {
-        if (ret.toCallable() == nullptr)
-        return ret;
-    }
-    return TokenLiteral(); 
+    return TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), false);
 }
 
 string LoxFunction::toString() {
