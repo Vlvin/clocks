@@ -17,9 +17,14 @@
 #include "headers/Interpreter.h"
 #include "headers/LoxCallable.h"
 #include "headers/LoxFunction.h"
+#include "headers/LoxInstance.h"
+#include "headers/LoxClass.h"
 
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitCallstring(Call &expr) { return ""; }
+string Interpreter::visitGetstring(Get &expr) { return ""; }
+string Interpreter::visitSetstring(Set &expr) { return ""; }
+string Interpreter::visitThisstring(This &expr) { return ""; }
 string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitLogicalstring(Logical &expr) { return ""; }
@@ -29,6 +34,7 @@ string Interpreter::visitAssignstring(Assign& expr){ return "";}
 
 string Interpreter::visitExpressionstring(Expression &stmt) { return ""; }
 string Interpreter::visitFunctionstring(Function &stmt) { return ""; }
+string Interpreter::visitClassstring(Class &stmt) { return ""; }
 string Interpreter::visitPrintstring(Print &stmt) { return ""; }
 string Interpreter::visitReturnstring(Return &stmt) { return ""; }
 string Interpreter::visitVarstring(Var &stmt) { return ""; }
@@ -189,6 +195,32 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
     return function->call(this, arguments); 
 }
 
+TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
+    TokenLiteral object = evaluate(expr.object);
+    if(object.toInstance() != nullptr) {
+        return object.toInstance()->get(expr.name);
+    }
+    throw RuntimeException(
+        expr.name,
+        "Only instances have properties.");
+}
+
+TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
+    TokenLiteral object = evaluate(expr.object);
+    if(object.toInstance() == nullptr) {
+        throw RuntimeException(
+            expr.name,
+            "Only instances have fields.");
+    }
+    TokenLiteral value = evaluate(expr.value);
+    object.toInstance()->set(expr.name, value);
+    return value;
+}
+
+TokenLiteral Interpreter::visitThisTokenLiteral(This &expr) {
+    return lookUpVariable(expr.keyword, &expr);
+}
+
 TokenLiteral Interpreter::visitGroupingTokenLiteral(Grouping &expr) {
     return evaluate(expr.expr);
 }
@@ -228,8 +260,21 @@ TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
 }
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
-    LoxFunction *function = new LoxFunction(stmt, this->environment);
+    LoxFunction *function = new LoxFunction(stmt, this->environment, false);
     environment->define(stmt.name, TokenLiteral(function));
+    return TokenLiteral();
+}
+
+
+TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
+    environment->define(stmt.name.lexeme, TokenLiteral());
+    map<string, LoxFunction*> methods = {};
+    for (Function* method: stmt.methods) {
+        LoxFunction *function = new LoxFunction(*method, environment, method->name.lexeme.compare("constructor") == 0);
+        methods.insert({method->name.lexeme, function});
+    }
+    LoxClass *LClass = new LoxClass(stmt.name.lexeme, methods);
+    environment->assign(stmt.name, LClass);
     return TokenLiteral();
 }
 

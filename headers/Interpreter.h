@@ -45,6 +45,9 @@ public:
 
     virtual string visitBinarystring(Binary &expr) override;
     virtual string visitCallstring(Call &expr) override;
+    virtual string visitGetstring(Get &expr) override;
+    virtual string visitSetstring(Set &expr) override;
+    virtual string visitThisstring(This &expr) override;
     virtual string visitGroupingstring(Grouping &expr) override;
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
@@ -54,6 +57,7 @@ public:
 
     virtual string visitExpressionstring(Expression &stmt) override;
     virtual string visitFunctionstring(Function &stmt) override;
+    virtual string visitClassstring(Class &stmt) override;
     virtual string visitPrintstring(Print &stmt) override;
     virtual string visitReturnstring(Return &stmt) override;
     virtual string visitVarstring(Var &stmt) override;
@@ -63,6 +67,9 @@ public:
 
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitCallTokenLiteral(Call &expr) override;
+    virtual TokenLiteral visitGetTokenLiteral(Get &expr) override;
+    virtual TokenLiteral visitSetTokenLiteral(Set &expr) override;
+    virtual TokenLiteral visitThisTokenLiteral(This &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;
@@ -72,6 +79,7 @@ public:
 
     virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
     virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) override;
+    virtual TokenLiteral visitClassTokenLiteral(Class &stmt) override;
     virtual TokenLiteral visitPrintTokenLiteral(Print &stmt) override;
     virtual TokenLiteral visitReturnTokenLiteral(Return &stmt) override;
     virtual TokenLiteral visitVarTokenLiteral(Var &stmt) override;

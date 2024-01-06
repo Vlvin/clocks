@@ -67,18 +67,18 @@ void Resolver::declare(Token name) {
 
 void Resolver::define(Token name) {
     if (scopes.empty()) return;
-    scopes[scopes.size()-1].find(name.lexeme)->second = true;
+    scopes.at(scopes.size()-1).find(name.lexeme)->second = true;
 }
 
 string Resolver::visitExpressionstring(Expression &stmt) {    return "";};
 string Resolver::visitFunctionstring(Function &stmt) {    return "";};
+string Resolver::visitClassstring(Class& stmt) { return "";};
 string Resolver::visitReturnstring(Return &stmt) {    return "";};
 string Resolver::visitPrintstring(Print &stmt) {    return "";};
 string Resolver::visitVarstring(Var &stmt) {    return "";};
 string Resolver::visitBlockstring(Block &stmt) {    return "";};
 string Resolver::visitIfstring(If &stmt) {    return "";};
 string Resolver::visitWhilestring(While &stmt) {    return "";};
-
 //you work here
 
 TokenLiteral Resolver::visitExpressionTokenLiteral(Expression &stmt) {
@@ -93,13 +93,37 @@ TokenLiteral Resolver::visitFunctionTokenLiteral(Function &stmt) {
     return TokenLiteral();
 };
 
+
+TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) { 
+    ClassType enclosingClass = currentClass;
+    currentClass = ClassType::CLASS;
+    declare(stmt.name);
+    define(stmt.name);
+    beginScope();
+    scopes.at(scopes.size()-1).insert({"this", true});
+    for (Function* method: stmt.methods) {
+        FunctionType declaration = FunctionType::METHOD;
+        if (method->name.lexeme.compare("constructor") == 0) 
+            declaration = FunctionType::INITIALIZER;
+        resolveFunction(*method, declaration);
+    }
+    endScope();
+    currentClass = enclosingClass;
+    return TokenLiteral();
+};
+
 TokenLiteral Resolver::visitReturnTokenLiteral(Return &stmt) {
-    if (currentFunction == FunctionType::NONE) {
+    if (currentFunction == FunctionType::FNONE) {
         Clockwork::error(
             stmt.keyword,
             "Can't return from top-level code.");
     }
     if (stmt.value != nullptr) {
+        if (currentFunction == FunctionType::INITIALIZER) {
+            Clockwork::error(
+                stmt.keyword,
+                "Can't return from class constructor.");
+        }
         resolve(stmt.value);
     }
     return TokenLiteral();
@@ -142,6 +166,9 @@ TokenLiteral Resolver::visitWhileTokenLiteral(While &stmt) {
 
 string Resolver::visitBinarystring(Binary &expr) {    return "";};
 string Resolver::visitCallstring(Call &expr) {    return "";};
+string Resolver::visitGetstring(Get &expr) {    return "";};
+string Resolver::visitSetstring(Set &expr) {    return "";};
+string Resolver::visitThisstring(This &expr) {    return "";};
 string Resolver::visitGroupingstring(Grouping &expr) {    return "";};
 string Resolver::visitLiteralstring(Literal &expr) {    return "";};
 string Resolver::visitLogicalstring(Logical &expr) {    return "";};
@@ -162,6 +189,26 @@ TokenLiteral Resolver::visitCallTokenLiteral(Call &expr) {
     }
     return TokenLiteral();
 };
+
+TokenLiteral Resolver::visitGetTokenLiteral(Get &expr) {
+    resolve(expr.object);
+    return TokenLiteral();
+}
+TokenLiteral Resolver::visitSetTokenLiteral(Set &expr) {
+    resolve(expr.value);
+    resolve(expr.object);
+    return TokenLiteral();
+}
+
+TokenLiteral Resolver::visitThisTokenLiteral(This &expr) {
+    if (currentClass == ClassType::CNONE) {
+        Clockwork::error(
+            expr.keyword,
+            "Can't use 'this' outside of a class.");
+    }
+    resolveLocal(&expr, expr.keyword);
+    return TokenLiteral();
+}
 
 TokenLiteral Resolver::visitGroupingTokenLiteral(Grouping &expr) {
     resolve(expr.expr);

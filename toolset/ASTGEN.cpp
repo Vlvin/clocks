@@ -11,6 +11,9 @@ using namespace PyUtils;
 vector<string> exprtypes = {
     "Binary   : Expr* left, Token oper, Expr* right",
     "Call     : Expr* callee, Token paren, vector<Expr*> arguments",
+    "Get      : Expr* object, Token name",
+    "Set      : Expr* object, Token name, Expr* value",
+    "This     : Token keyword",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
     "Logical  : Expr* left, Token oper, Expr* right",
@@ -23,6 +26,7 @@ vector<string> exprtypes = {
 vector<string> stmtypes = {
     "Expression : Expr* expression",
     "Function   : Token name, vector<Token> params, vector<Stmt*> body",
+    "Class      : Token name, vector<Function*> methods",
     "Return     : Token keyword, Expr* value",
     "Print      : Expr* expression",
     "Var        : Token name, Expr* initializer",

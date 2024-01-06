@@ -29,6 +29,36 @@ TokenLiteral Call::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->
 }
 
 
+Get::Get(Expr* object, Token name)
+     : object(object),name(name) {}
+
+string Get::acceptstring(VisitorExpr *visitor) {   return visitor->visitGetstring(*this);
+}
+
+TokenLiteral Get::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitGetTokenLiteral(*this);
+}
+
+
+Set::Set(Expr* object, Token name, Expr* value)
+     : object(object),name(name),value(value) {}
+
+string Set::acceptstring(VisitorExpr *visitor) {   return visitor->visitSetstring(*this);
+}
+
+TokenLiteral Set::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitSetTokenLiteral(*this);
+}
+
+
+This::This(Token keyword)
+     : keyword(keyword) {}
+
+string This::acceptstring(VisitorExpr *visitor) {   return visitor->visitThisstring(*this);
+}
+
+TokenLiteral This::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->visitThisTokenLiteral(*this);
+}
+
+
 Grouping::Grouping(Expr* expr)
      : expr(expr) {}
 

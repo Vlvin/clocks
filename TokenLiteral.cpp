@@ -6,21 +6,20 @@ using namespace std;
 
 #include "headers/TokenLiteral.h"
 #include "headers/LoxCallable.h"
+#include "headers/LoxInstance.h"
 #include "headers/PyUtils.h"
 
-TokenLiteral::TokenLiteral() : d(), s(), lc(), type(TokenLiteral::NIL), isReturn(false) {}
+TokenLiteral::TokenLiteral() : d(), s(), lc(), li(), type(TokenLiteral::NIL), isReturn(false) {}
 
+TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), li(), type(TokenLiteral::NUMBER), isReturn(false) {}
 
-TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), type(TokenLiteral::NUMBER), isReturn(false) {}
+TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), li(), type(TokenLiteral::STRING), isReturn(false) {}
 
+TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), li(), type(TokenLiteral::CALLABLE), isReturn(false) {}
 
-TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), type(TokenLiteral::STRING), isReturn(false) {}
+TokenLiteral::TokenLiteral(LoxInstance* li) : d(), s(), lc(), li(li), type(TokenLiteral::INSTANCE), isReturn(false) {}
 
-
-TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), type(TokenLiteral::CALLABLE), isReturn(false) {}
-
-
-TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), type(TokenLiteral::BOOLEAN), isReturn(false) {}
+TokenLiteral::TokenLiteral(bool b) : d(b), s(s), lc(lc), li(li), type(TokenLiteral::BOOLEAN), isReturn(false) {}
 
 TokenLiteral::TokenLiteral(TokenLiteral tl, bool isReturn) : type(tl.type), isReturn(isReturn) {
     switch (tl.type) {
@@ -33,6 +32,8 @@ TokenLiteral::TokenLiteral(TokenLiteral tl, bool isReturn) : type(tl.type), isRe
             break;
         case CALLABLE:
             lc = tl.lc;
+        case INSTANCE:
+            li = tl.li;
             break;
         case NIL:
             break;
@@ -53,6 +54,8 @@ string TokenLiteral::toString() {
             return ((d == 1) ? "true" : "false");
         case TokenLiteral::CALLABLE:
             return lc->toString();
+        case TokenLiteral::INSTANCE:
+            return li->toString();
     }
     return "nil";
 }
@@ -71,6 +74,14 @@ LoxCallable* TokenLiteral::toCallable() {
     switch(type) {
         case TokenLiteral::CALLABLE:
             return lc;
+    }
+    return nullptr;
+}
+
+LoxInstance* TokenLiteral::toInstance() {
+    switch(type) {
+        case TokenLiteral::INSTANCE:
+            return li;
     }
     return nullptr;
 }

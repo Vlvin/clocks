@@ -47,6 +47,39 @@ public:
 
 };
 
+class Get : public Expr {
+public:
+   Expr* object;
+   Token name;
+   Get(Expr* object, Token name);
+
+   string acceptstring(VisitorExpr *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorExpr *visitor);
+
+};
+
+class Set : public Expr {
+public:
+   Expr* object;
+   Token name;
+   Expr* value;
+   Set(Expr* object, Token name, Expr* value);
+
+   string acceptstring(VisitorExpr *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorExpr *visitor);
+
+};
+
+class This : public Expr {
+public:
+   Token keyword;
+   This(Token keyword);
+
+   string acceptstring(VisitorExpr *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorExpr *visitor);
+
+};
+
 class Grouping : public Expr {
 public:
    Expr* expr;

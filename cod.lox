@@ -50,7 +50,6 @@ print(a);
  * full of dead functions bodies
  * but do not give them your attention 
  * it is OK 
- */
 fun fib(n) { 
     if (n <= 1) 
     {
@@ -59,4 +58,16 @@ fun fib(n) {
     return (fib(n-1) + fib(n-2)); 
 }
 print(fib(30));
+ */
 
+class Numbers {
+    constructor() {
+        print("Num created");    
+    }
+    one() {
+        return 1;
+    }
+}
+
+var some = Numbers();
+print(some.one());

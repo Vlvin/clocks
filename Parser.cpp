@@ -94,7 +94,7 @@ Stmt* Parser::declaration() {
     try {
         if (match({FUN})) return function("function");
         if (match({VAR})) return varDeclaration();
-
+        if (match({CLASS})) return classDeclaration();
         return statement();
     } catch (ParseError error) {
         synchronize();
@@ -112,6 +112,17 @@ Stmt* Parser::varDeclaration() {
 
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Var(name, initializer);
+}
+
+Stmt* Parser::classDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect class name");
+    consume(LEFT_BRACE, "Expect '{' before class body");
+    vector<Function*> methods = {};
+    while(!check(RIGHT_BRACE) && !isAtEnd()) {
+        methods.push_back((dynamic_cast<Function*>(function("method"))));
+    }
+    consume(RIGHT_BRACE, "Expect '}' after class body");
+    return new Class(name, methods);
 }
 
 Stmt* Parser::function(string kind) {
@@ -254,10 +265,13 @@ Expr* Parser::assignment() {
     if (match({EQUAL})) {
         Token equals = previous();
         Expr* value = assignment();
-        Variable *assign = dynamic_cast<Variable *>(expr);
-        if (assign != nullptr) {
-            Token name = assign->name;
+        Variable *variable = dynamic_cast<Variable *>(expr);
+        Get *property = dynamic_cast<Get *>(expr);
+        if (variable != nullptr) {
+            Token name = variable->name;
             return new Assign(name, value);
+        } else if (property != nullptr) {
+            return new Set(property->object, property->name, value);
         }
 
         error(equals, "Invalid assignmnt target");
@@ -353,6 +367,9 @@ Expr* Parser::call() {
     while (true) {
         if (match({LEFT_PAREN})) {
             expr = finishCall(expr);
+        } else if (match({DOT})) {
+            Token name = consume(IDENTIFIER, "Expected member name after '.'.");
+            expr = new Get(expr, name);
         } else {
             break;
         }
@@ -381,8 +398,9 @@ Expr* Parser::finishCall(Expr* callee) {
     
     return new Call(callee, paren, arguments);
 }
- 
+
 Expr* Parser::primary() {
+    if (match({THIS})) return new This(previous());
     if (match({FALSE})) return new Literal(TokenLiteral(false));
     if (match({TRUE})) return new Literal(TokenLiteral(true));
     if (match({TokenType::NIL})) return new Literal(TokenLiteral());
