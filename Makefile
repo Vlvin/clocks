@@ -6,9 +6,9 @@ all:
 	make lox
 	make test
 
-buildonly:
+buildonly: Main.cpp $(Locals)
 	make ast
-	make lox
+	g++ $^ -o lox
 
 buildoptimizes: Main.cpp $(Locals)
 	make ast

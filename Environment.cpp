@@ -42,7 +42,7 @@ void Environment::assign(Token name, TokenLiteral value) {
     }
     if (enclosing != NULL) {
         enclosing->assign(name, value);
-        return;
+        return; 
     }
 
 

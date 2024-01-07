@@ -13,7 +13,9 @@ int LoxClass::arity() {
 }
 
 LoxFunction* LoxClass::findMethod(string name) {
-    if (methods.count(name) > 0) return methods.find(name)->second;
+    if (methods.count(name) > 0) {
+        return methods.find(name)->second;
+    };
     return nullptr;
 }
 
@@ -21,7 +23,7 @@ TokenLiteral LoxClass::call(Interpreter *interpreter, vector<TokenLiteral> argum
     LoxInstance *instance = new LoxInstance(this);
     LoxFunction *constructor = findMethod("constructor");
     if (constructor != nullptr) {
-        constructor->bind(instance).toCallable()->call(interpreter, arguments);
+        ((constructor->bind(instance)).toCallable())->call(interpreter, arguments);
     }
     return TokenLiteral(instance);
 }

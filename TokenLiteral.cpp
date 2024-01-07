@@ -19,7 +19,7 @@ TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), li(), type(Token
 
 TokenLiteral::TokenLiteral(LoxInstance* li) : d(), s(), lc(), li(li), type(TokenLiteral::INSTANCE), isReturn(false) {}
 
-TokenLiteral::TokenLiteral(bool b) : d(b), s(s), lc(lc), li(li), type(TokenLiteral::BOOLEAN), isReturn(false) {}
+TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), li(), type(TokenLiteral::BOOLEAN), isReturn(false) {}
 
 TokenLiteral::TokenLiteral(TokenLiteral tl, bool isReturn) : type(tl.type), isReturn(isReturn) {
     switch (tl.type) {

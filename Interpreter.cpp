@@ -388,7 +388,7 @@ void Interpreter::interpret(vector<Stmt*> statements) {
     try {
         for (Stmt* statement: statements) {
             execute(statement);
-            free(statement);
+            delete (statement);
             statement = nullptr;
         }
     } catch (RuntimeException error) {

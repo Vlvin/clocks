@@ -30,6 +30,7 @@ map<string, TokenType> const Scanner::keywords = {
     {"this",   THIS},
     {"true",   TRUE},
     {"var",    VAR},
+    {"static",    STATIC},
     {"while",  WHILE}
 };
 

@@ -21,7 +21,7 @@ int LoxFunction::arity() {
 TokenLiteral LoxFunction::bind(LoxInstance* binding) {
     Environment *environment = new Environment(closure);
     environment->define("this", binding);
-    return new LoxFunction(declaration, environment, isInitializer);
+    return TokenLiteral(new LoxFunction(declaration, environment, isInitializer));
 }
 
 TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
@@ -29,9 +29,10 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
     for (int i = 0; i < declaration.params.size(); i++) {
         LocalEnvironment->define(declaration.params[i], arguments[i]);
     }
+    TokenLiteral value = TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), false);
     if (isInitializer) return TokenLiteral(closure->getAt(0, "this"));
-    return TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), false);
-}
+    return value;
+    }
 
 string LoxFunction::toString() {
     return "<fun " + declaration.name.lexeme + ">";

@@ -49,7 +49,7 @@ print(a);
  * next you can see field 
  * full of dead functions bodies
  * but do not give them your attention 
- * it is OK 
+ * it is OK
 fun fib(n) { 
     if (n <= 1) 
     {
@@ -57,17 +57,34 @@ fun fib(n) {
     } 
     return (fib(n-1) + fib(n-2)); 
 }
-print(fib(30));
+print(fib(30)); 
  */
-
 class Numbers {
-    constructor() {
-        print("Num created");    
+    constructor(a, b, c) { 
+        print(a, b, c);
+        this.a = a;
     }
+    
     one() {
         return 1;
     }
+    
+    two() {
+        return 2;
+    }
+    
+    three() {
+        return 3;
+    }
+    
+    four() {
+        return 4;
+    }
+    
+    five() {
+        return 5;
+    }
 }
 
-var some = Numbers();
-print(some.one());
+var some = Numbers(1,2,3);
+print(some.a);

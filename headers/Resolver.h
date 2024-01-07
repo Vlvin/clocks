@@ -20,7 +20,8 @@ class Resolver: public VisitorExpr, public VisitorStmt {
         FNONE,
         FUNCTION,
         INITIALIZER,
-        METHOD
+        METHOD,
+        STATICF
     };
     enum ClassType {
         CNONE,
