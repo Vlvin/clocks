@@ -48,8 +48,9 @@ public:
 class Class : public Stmt {
 public:
    Token name;
+   vector<Function*> statics;
    vector<Function*> methods;
-   Class(Token name, vector<Function*> methods);
+   Class(Token name, vector<Function*> statics, vector<Function*> methods);
 
    string acceptstring(VisitorStmt *visitor);
    TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);

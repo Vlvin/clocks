@@ -59,32 +59,13 @@ fun fib(n) {
 }
 print(fib(30)); 
  */
-class Numbers {
-    constructor(a, b, c) { 
-        print(a, b, c);
-        this.a = a;
-    }
-    
-    one() {
-        return 1;
-    }
-    
-    two() {
-        return 2;
-    }
-    
-    three() {
-        return 3;
-    }
-    
-    four() {
-        return 4;
-    }
-    
-    five() {
-        return 5;
+
+
+// Bellissimo: Static Methods
+class Static {
+    static member() {
+        print("I am static");
     }
 }
 
-var some = Numbers(1,2,3);
-print(some.a);
+Static.member();

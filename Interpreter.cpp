@@ -200,9 +200,14 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
     if(object.toInstance() != nullptr) {
         return object.toInstance()->get(expr.name);
     }
-    throw RuntimeException(
-        expr.name,
-        "Only instances have properties.");
+    if(dynamic_cast<LoxClass*>(object.toCallable()) != nullptr) {
+        return dynamic_cast<LoxClass*>(object.toCallable())->findStaticMethod(expr.name.lexeme);
+    }
+    
+    if(object.toInstance() != nullptr)
+        throw RuntimeException(
+            expr.name,
+            "Can get only from class or instance.");
 }
 
 TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
@@ -265,15 +270,24 @@ TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
     return TokenLiteral();
 }
 
-
 TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
     environment->define(stmt.name.lexeme, TokenLiteral());
     map<string, LoxFunction*> methods = {};
+    map<string, LoxFunction*> statics = {};
     for (Function* method: stmt.methods) {
         LoxFunction *function = new LoxFunction(*method, environment, method->name.lexeme.compare("constructor") == 0);
         methods.insert({method->name.lexeme, function});
     }
-    LoxClass *LClass = new LoxClass(stmt.name.lexeme, methods);
+    for (Function* sMethod: stmt.statics) {
+        LoxFunction *function = new LoxFunction(*sMethod, environment, false);
+        if (methods.count(sMethod->name.lexeme) > 0)
+            throw RuntimeException(
+                sMethod->name,
+                "Can't declare method with same name as static.");
+
+        statics.insert({sMethod->name.lexeme, function});
+    }
+    LoxClass *LClass = new LoxClass(stmt.name.lexeme, statics, methods);
     environment->assign(stmt.name, LClass);
     return TokenLiteral();
 }

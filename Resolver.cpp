@@ -106,7 +106,16 @@ TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
         if (method->name.lexeme.compare("constructor") == 0) 
             declaration = FunctionType::INITIALIZER;
         resolveFunction(*method, declaration);
-    }
+    } 
+    for (Function* loxStatic: stmt.statics) {
+        FunctionType declaration = FunctionType::STATICF;
+        if (loxStatic->name.lexeme.compare("constructor") == 0) 
+            Clockwork::error(
+                stmt.name,
+                "Class constructor can't be static"
+            );
+        resolveFunction(*loxStatic, declaration);
+    } 
     endScope();
     currentClass = enclosingClass;
     return TokenLiteral();
@@ -122,7 +131,8 @@ TokenLiteral Resolver::visitReturnTokenLiteral(Return &stmt) {
         if (currentFunction == FunctionType::INITIALIZER) {
             Clockwork::error(
                 stmt.keyword,
-                "Can't return from class constructor.");
+                "Can't return from class constructor."
+            );
         }
         resolve(stmt.value);
     }
@@ -205,6 +215,11 @@ TokenLiteral Resolver::visitThisTokenLiteral(This &expr) {
         Clockwork::error(
             expr.keyword,
             "Can't use 'this' outside of a class.");
+    }
+    if (currentFunction == FunctionType::STATICF) {
+        Clockwork::error(
+            expr.keyword,
+            "Can't use 'this' in static method.");
     }
     resolveLocal(&expr, expr.keyword);
     return TokenLiteral();

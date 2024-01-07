@@ -30,9 +30,12 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
         LocalEnvironment->define(declaration.params[i], arguments[i]);
     }
     TokenLiteral value = TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), false);
-    if (isInitializer) return TokenLiteral(closure->getAt(0, "this"));
+    
+    if (isInitializer) 
+        return TokenLiteral(closure->getAt(0, "this"));
+    
     return value;
-    }
+}
 
 string LoxFunction::toString() {
     return "<fun " + declaration.name.lexeme + ">";

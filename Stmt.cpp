@@ -29,8 +29,8 @@ TokenLiteral Function::acceptTokenLiteral(VisitorStmt *visitor) {   return visit
 }
 
 
-Class::Class(Token name, vector<Function*> methods)
-     : name(name),methods(methods) {}
+Class::Class(Token name, vector<Function*> statics, vector<Function*> methods)
+     : name(name),statics(statics),methods(methods) {}
 
 string Class::acceptstring(VisitorStmt *visitor) {   return visitor->visitClassstring(*this);
 }

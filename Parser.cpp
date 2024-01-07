@@ -118,11 +118,19 @@ Stmt* Parser::classDeclaration() {
     Token name = consume(IDENTIFIER, "Expect class name");
     consume(LEFT_BRACE, "Expect '{' before class body");
     vector<Function*> methods = {};
+    vector<Function*> statics = {};
     while(!check(RIGHT_BRACE) && !isAtEnd()) {
-        methods.push_back((dynamic_cast<Function*>(function("method"))));
+        if (match({STATIC})) {
+            Function* sMethod = (dynamic_cast<Function*>(function("static_method")));
+            statics.push_back(sMethod);
+        }
+        else {
+            Function* method = (dynamic_cast<Function*>(function("static_method")));
+            methods.push_back(method);
+        }
     }
     consume(RIGHT_BRACE, "Expect '}' after class body");
-    return new Class(name, methods);
+    return new Class(name, statics, methods);
 }
 
 Stmt* Parser::function(string kind) {

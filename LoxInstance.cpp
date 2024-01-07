@@ -17,6 +17,11 @@ TokenLiteral LoxInstance::get(Token name) {
     if (method != nullptr) {
         return method->bind(this);
     }
+
+    LoxFunction *sMethod = LClass->findStaticMethod(name.lexeme);
+    if (sMethod != nullptr) {
+        return method;
+    }
     throw RuntimeException(
         name,
         "Undefined property '" + name.lexeme + "'.");
