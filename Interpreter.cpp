@@ -218,7 +218,7 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
         throw RuntimeException(
             expr.name,
             "Can get only from class or instance.");
-}
+} 
  
 TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
     TokenLiteral object = evaluate(expr.object);
