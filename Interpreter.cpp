@@ -219,7 +219,7 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
             expr.name,
             "Can get only from class or instance.");
 }
-
+ 
 TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
     TokenLiteral object = evaluate(expr.object);
     if(object.toInstance() == nullptr) {
