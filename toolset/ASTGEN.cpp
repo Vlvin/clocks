@@ -25,11 +25,11 @@ vector<string> exprtypes = {
 
 vector<string> stmtypes = {
     "Expression : Expr* expression",
-    "Function   : Token name, vector<Token> params, vector<Stmt*> body",
+    "Function   : Token name, vector<Token> params, vector<Stmt*> body, bool isConst",
     "Class      : Token name, vector<Function*> statics, vector<Function*> methods",
     "Return     : Token keyword, Expr* value",
     "Print      : Expr* expression",
-    "Var        : Token name, Expr* initializer",
+    "Var        : Token name, Expr* initializer, bool isConst",
     "Block      : vector<Stmt*> statements",
     "If         : Expr* condition, Stmt* thenBranch, Stmt* elseBranch",
     "While      : Expr* condition, Stmt* body"

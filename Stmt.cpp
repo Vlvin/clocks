@@ -19,8 +19,8 @@ TokenLiteral Expression::acceptTokenLiteral(VisitorStmt *visitor) {   return vis
 }
 
 
-Function::Function(Token name, vector<Token> params, vector<Stmt*> body)
-     : name(name),params(params),body(body) {}
+Function::Function(Token name, vector<Token> params, vector<Stmt*> body, bool isConst)
+     : name(name),params(params),body(body),isConst(isConst) {}
 
 string Function::acceptstring(VisitorStmt *visitor) {   return visitor->visitFunctionstring(*this);
 }
@@ -59,8 +59,8 @@ TokenLiteral Print::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor-
 }
 
 
-Var::Var(Token name, Expr* initializer)
-     : name(name),initializer(initializer) {}
+Var::Var(Token name, Expr* initializer, bool isConst)
+     : name(name),initializer(initializer),isConst(isConst) {}
 
 string Var::acceptstring(VisitorStmt *visitor) {   return visitor->visitVarstring(*this);
 }

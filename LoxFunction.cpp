@@ -29,7 +29,7 @@ TokenLiteral LoxFunction::call(Interpreter *interpreter, vector<TokenLiteral> ar
     for (int i = 0; i < declaration.params.size(); i++) {
         LocalEnvironment->define(declaration.params[i], arguments[i]);
     }
-    TokenLiteral value = TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), false);
+    TokenLiteral value = TokenLiteral(interpreter->executeBlock(declaration.body, LocalEnvironment), {false});
     
     if (isInitializer) 
         return TokenLiteral(closure->getAt(0, "this"));

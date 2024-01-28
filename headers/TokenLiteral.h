@@ -16,6 +16,7 @@ class TokenLiteral {
     LoxInstance* li;
     // you need LoxCallable here as a new type of var
 public:
+    bool isConst;
     bool isReturn;
     enum lType {
         NUMBER,
@@ -34,7 +35,7 @@ public:
     TokenLiteral(LoxCallable* lc);
     TokenLiteral(LoxInstance* li);
     TokenLiteral(bool b);
-    TokenLiteral(TokenLiteral tl, bool isReturn);
+    TokenLiteral(TokenLiteral tl, vector<bool> flags);
 
     LoxCallable* toCallable();
     LoxInstance* toInstance();

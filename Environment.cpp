@@ -32,27 +32,43 @@ void Environment::define(Token name, TokenLiteral value) {
     if (values.count(name.lexeme) > 0)
         throw RuntimeException(name, "Redefenition of variable '" + name.lexeme + "'.");
     else
-        values.insert({name.lexeme, value}); 
+        values.insert({name.lexeme, value});
 }
- 
+
 void Environment::assign(Token name, TokenLiteral value) {
     if (values.count(name.lexeme) > 0) {
-        values.find(name.lexeme)->second = value;
-        return;
+        auto target = values.find(name.lexeme);
+        if ((!target->second.isConst || target->second.type == TokenLiteral::NIL)) {
+            target->second = TokenLiteral(value, {target->second.isReturn, target->second.isConst});
+            return;
+        } else {
+            string errorTarget = "variable";
+            if (target->second.type == TokenLiteral::CALLABLE)
+                errorTarget = "function";
+            throw RuntimeException(name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
+        }
     }
     if (enclosing != NULL) {
         enclosing->assign(name, value);
-        return; 
+        return;
     }
 
 
     throw RuntimeException(name, "Undefined variable '" + name.lexeme + "'.");
 }
 
- 
+
 void Environment::assignAt(int distance, Token name, TokenLiteral value) {
     Environment* onPosition = ancestor(distance);
-    onPosition->values.find(name.lexeme)->second = value;
+    auto target = onPosition->values.find(name.lexeme);
+    if ((!target->second.isConst || target->second.type == TokenLiteral::NIL))
+        target->second = TokenLiteral(value, {target->second.isReturn, target->second.isConst});
+    else {
+        string errorTarget = "variable";
+        if (target->second.type == TokenLiteral::CALLABLE)
+            errorTarget = "function";
+        throw RuntimeException(name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
+    }
 }
 
 TokenLiteral Environment::get(Token name){
@@ -65,6 +81,6 @@ TokenLiteral Environment::get(Token name){
     throw RuntimeException(name , "Undefined variable '" + name.lexeme + "'.");
 }
 
-TokenLiteral Environment::getAt(int distance, string name){
+TokenLiteral Environment::getAt(int distance, string name) {
     return ancestor(distance)->values.find(name)->second;
 }

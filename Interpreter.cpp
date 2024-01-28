@@ -20,6 +20,8 @@
 #include "headers/LoxInstance.h"
 #include "headers/LoxClass.h"
 
+using namespace std;
+
 string Interpreter::visitBinarystring(Binary &expr){ return ""; }
 string Interpreter::visitCallstring(Call &expr) { return ""; }
 string Interpreter::visitGetstring(Get &expr) { return ""; }
@@ -45,24 +47,32 @@ string Interpreter::visitWhilestring(While &stmt) { return ""; }
 Interpreter::Interpreter() {
     globals->define(
         "clock",
-        TokenLiteral(new LoxClock())
+        TokenLiteral(new LoxClock(), {false, true})
     );
     globals->define(
         "exit",
-        TokenLiteral(new LoxExit())
+        TokenLiteral(new LoxExit(), {false, true})
     );
     globals->define(
         "print",
-        TokenLiteral(new LoxPrint())
+        TokenLiteral(new LoxPrint(), {false, true})
     );
     globals->define(
-        "PI",
-        TokenLiteral(3.1415926535897932384626433)
+        "type",
+        TokenLiteral(new LoxType(), {false, true})
     );
     globals->define(
-        "E",
-        TokenLiteral(2.71828182845904523536028747135266249775724709369995)
+        "Math",
+        TokenLiteral(new LoxMath(), {false, true})
     );
+    // globals->define(
+    //     "PI",
+    //     TokenLiteral(3.1415926535897932384626433, {false, true})
+    // );
+    // globals->define(
+    //     "E",
+    //     TokenLiteral(2.71828182845904523536028747135266249775724709369995, {false, true})
+    // );
 }
  
 TokenLiteral Interpreter::evaluate(Expr* expr) {
@@ -266,7 +276,7 @@ TokenLiteral Interpreter::visitVariableTokenLiteral(Variable &expr) {
 
 TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
     LoxFunction *function = new LoxFunction(stmt, this->environment, false);
-    environment->define(stmt.name, TokenLiteral(function));
+    environment->define(stmt.name, TokenLiteral(TokenLiteral(function), {false, stmt.isConst}));
     return TokenLiteral();
 }
 
@@ -320,7 +330,7 @@ TokenLiteral Interpreter::visitReturnTokenLiteral(Return &stmt) {
     if (stmt.value != NULL) { 
         value = evaluate(stmt.value);
     }
-    return TokenLiteral(value, true);
+    return TokenLiteral(value, {true});
 }
 
 TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
@@ -329,6 +339,8 @@ TokenLiteral Interpreter::visitVarTokenLiteral(Var &stmt) {
     if (stmt.initializer != NULL) {
         value = evaluate(stmt.initializer);
     }
+
+    value.isConst = stmt.isConst;
 
     environment->define(stmt.name, value);
     return TokenLiteral();

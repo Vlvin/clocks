@@ -82,6 +82,13 @@ Token Parser::consume(TokenType type, string message) {
     throw error(peek(), message);
 }
 
+Token Parser::consumes(vector<TokenType> types, string message) {
+    for (TokenType type: types) {
+        if (check(type)) return advance();
+    }
+    throw error(peek(), message);
+}
+
 vector<Stmt*> Parser::parse() {
     vector<Stmt*> statements = {};
     while (!isAtEnd()) {
@@ -92,9 +99,10 @@ vector<Stmt*> Parser::parse() {
 
 Stmt* Parser::declaration() {
     try {
-        if (match({FUN})) return function("function");
-        if (match({VAR})) return varDeclaration();
+        if (match({FUN})) return function("function", false);
+        if (match({VAR})) return varDeclaration(false);
         if (match({CLASS})) return classDeclaration();
+        if (match({CONST})) return constDeclaration();
         return statement();
     } catch (ParseError error) {
         synchronize();
@@ -102,7 +110,13 @@ Stmt* Parser::declaration() {
     }
 }
 
-Stmt* Parser::varDeclaration() {
+Stmt* Parser::constDeclaration() {
+    if (match({VAR})) return varDeclaration(true);
+    if (match({FUN})) return function("function", true);
+    throw error(peek(), "Expected type after keyword 'const'.");
+}
+
+Stmt* Parser::varDeclaration(bool isConst) {
     Token name = consume(IDENTIFIER, "Expect variable name");
 
     Expr* initializer = nullptr;
@@ -111,7 +125,7 @@ Stmt* Parser::varDeclaration() {
     } 
 
     consume(SEMICOLON, "Expect ';' after variable declaration.");
-    return new Var(name, initializer);
+    return new Var(name, initializer, isConst);
 }
 
 Stmt* Parser::classDeclaration() {
@@ -120,20 +134,31 @@ Stmt* Parser::classDeclaration() {
     vector<Function*> methods = {};
     vector<Function*> statics = {};
     while(!check(RIGHT_BRACE) && !isAtEnd()) {
-        if (match({STATIC})) {
-            Function* sMethod = (dynamic_cast<Function*>(function("static_method")));
-            statics.push_back(sMethod);
-        }
-        else {
-            Function* method = (dynamic_cast<Function*>(function("static_method")));
-            methods.push_back(method);
+        if (match({CONST})) {
+            if (match({STATIC})) {
+                Function* sMethod = (dynamic_cast<Function*>(function("static_method", false)));
+                statics.push_back(sMethod);
+            }
+            else {
+                Function* method = (dynamic_cast<Function*>(function("method", false)));
+                methods.push_back(method);
+            }
+        } else {
+            if (match({STATIC})) {
+                Function* sMethod = (dynamic_cast<Function*>(function("static_method", true)));
+                statics.push_back(sMethod);
+            }
+            else {
+                Function* method = (dynamic_cast<Function*>(function("method", true)));
+                methods.push_back(method);
+            }
         }
     }
     consume(RIGHT_BRACE, "Expect '}' after class body");
     return new Class(name, statics, methods);
 }
 
-Stmt* Parser::function(string kind) {
+Stmt* Parser::function(string kind, bool isConst) {
     Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
 
     consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
@@ -152,7 +177,7 @@ Stmt* Parser::function(string kind) {
 
     consume(LEFT_BRACE, "Expect '{' before " + kind + " body");
     vector<Stmt*> body = block();
-    return new Function(name, parameters, body);
+    return new Function(name, parameters, body, isConst);
 }
 
 Stmt* Parser::statement() {
@@ -219,7 +244,7 @@ Stmt* Parser::forStatement() {
     if (match({SEMICOLON})) {
         initializer = nullptr;
     } else if (match({VAR})) {
-        initializer = varDeclaration();
+        initializer = varDeclaration(false);
     } else {
         initializer = expressionStatement();
     }

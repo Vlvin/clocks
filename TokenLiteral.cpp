@@ -9,19 +9,26 @@ using namespace std;
 #include "headers/LoxInstance.h"
 #include "headers/PyUtils.h"
 
-TokenLiteral::TokenLiteral() : d(), s(), lc(), li(), type(TokenLiteral::NIL), isReturn(false) {}
+TokenLiteral::TokenLiteral() : d(), s(), lc(), li(), type(TokenLiteral::NIL), isReturn(false), isConst(false) {}
 
-TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), li(), type(TokenLiteral::NUMBER), isReturn(false) {}
+TokenLiteral::TokenLiteral(double d) : d(d), s(), lc(), li(), type(TokenLiteral::NUMBER), isReturn(false), isConst(false)  {}
 
-TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), li(), type(TokenLiteral::STRING), isReturn(false) {}
+TokenLiteral::TokenLiteral(string s) : d(), s(s), lc(), li(), type(TokenLiteral::STRING), isReturn(false), isConst(false)  {}
 
-TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), li(), type(TokenLiteral::CALLABLE), isReturn(false) {}
+TokenLiteral::TokenLiteral(LoxCallable* lc) : d(), s(), lc(lc), li(), type(TokenLiteral::CALLABLE), isReturn(false), isConst(false)  {}
 
-TokenLiteral::TokenLiteral(LoxInstance* li) : d(), s(), lc(), li(li), type(TokenLiteral::INSTANCE), isReturn(false) {}
+TokenLiteral::TokenLiteral(LoxInstance* li) : d(), s(), lc(), li(li), type(TokenLiteral::INSTANCE), isReturn(false), isConst(false)  {}
 
-TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), li(), type(TokenLiteral::BOOLEAN), isReturn(false) {}
+TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), li(), type(TokenLiteral::BOOLEAN), isReturn(false), isConst(false)  {}
 
-TokenLiteral::TokenLiteral(TokenLiteral tl, bool isReturn) : type(tl.type), isReturn(isReturn) {
+TokenLiteral::TokenLiteral(TokenLiteral tl, vector<bool> flags) : type(tl.type) {
+    isConst = false, isReturn = false;
+    switch (flags.size()) {
+        case 2:
+            isConst = flags[1];
+        case 1:
+            isReturn = flags[0];
+    }
     switch (tl.type) {
         case NUMBER:
         case BOOLEAN:

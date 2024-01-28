@@ -13,7 +13,7 @@ class LoxInstance {
     map<string, TokenLiteral> fields = {};
 public:
     LoxInstance(LoxClass* LClass);
-    string toString();
-    TokenLiteral get(Token name);
-    TokenLiteral set(Token name, TokenLiteral value);
+    virtual string toString();
+    virtual TokenLiteral get(Token name);
+    virtual TokenLiteral set(Token name, TokenLiteral value);
 };

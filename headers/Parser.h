@@ -36,9 +36,10 @@ class Parser {
 
     Stmt* statement();
     Stmt* declaration();
-    Stmt* varDeclaration();
+    Stmt* constDeclaration();
+    Stmt* varDeclaration(bool isConst);
     Stmt* classDeclaration();
-    Stmt* function(string kind);
+    Stmt* function(string kind, bool isConst);
     Stmt* forStatement();
     Stmt* ifStatement();
     Stmt* whileStatement();
@@ -55,7 +56,8 @@ class Parser {
     Token peek();
     Token previous();
     Token consume(TokenType type, string message);
-    
+    Token consumes(vector<TokenType> types, string message);
+
     ParseError error(Token token, string message);
 public:
     vector<Stmt*> parse();

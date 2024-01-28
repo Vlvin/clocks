@@ -38,7 +38,8 @@ public:
    Token name;
    vector<Token> params;
    vector<Stmt*> body;
-   Function(Token name, vector<Token> params, vector<Stmt*> body);
+   bool isConst;
+   Function(Token name, vector<Token> params, vector<Stmt*> body, bool isConst);
 
    string acceptstring(VisitorStmt *visitor);
    TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
@@ -82,7 +83,8 @@ class Var : public Stmt {
 public:
    Token name;
    Expr* initializer;
-   Var(Token name, Expr* initializer);
+   bool isConst;
+   Var(Token name, Expr* initializer, bool isConst);
 
    string acceptstring(VisitorStmt *visitor);
    TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);

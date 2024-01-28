@@ -16,6 +16,7 @@ Scanner::Scanner(string source)
 
 map<string, TokenType> const Scanner::keywords = {
     {"and",    AND},
+    {"const",   CONST},
     {"class",  CLASS},
     {"else",   ELSE},
     {"false",  FALSE},
@@ -24,13 +25,13 @@ map<string, TokenType> const Scanner::keywords = {
     {"if",     IF},
     {"nil",    NIL},
     {"or",     OR},
-    {"dPrint",  PRINT}, // will work even if globals are broken
+    {"dPrint", PRINT}, // will work even if globals are broken
     {"return", RETURN},
     {"super",  SUPER},
     {"this",   THIS},
     {"true",   TRUE},
     {"var",    VAR},
-    {"static",    STATIC},
+    {"static", STATIC},
     {"while",  WHILE}
 };
 
