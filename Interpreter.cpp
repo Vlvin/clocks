@@ -130,6 +130,12 @@ void Interpreter::checkNumberOperands(Token oper, TokenLiteral left, TokenLitera
     throw RuntimeException(oper, "Operands must be numbers.");
 }
 
+TokenLiteral Interpreter::moduloDivision(TokenLiteral left, TokenLiteral right) {
+    double div = (left.toNumber() / right.toNumber()) - floor(left.toNumber() / right.toNumber());
+
+    return TokenLiteral(div * right.toNumber());
+}
+
 TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
     TokenLiteral left = evaluate(expr.left);
     TokenLiteral right = evaluate(expr.right);
@@ -168,6 +174,10 @@ TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
         case TokenType::STAR:
             checkNumberOperands(expr.oper, left, right);
             return left.toNumber() * right.toNumber();
+        // udef
+        case TokenType::MOD:
+            checkNumberOperands(expr.oper, left, right);
+            return moduloDivision(left, right);
     }
     return TokenLiteral();
 }
@@ -214,10 +224,10 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
         return dynamic_cast<LoxClass*>(object.toCallable())->findStaticMethod(expr.name.lexeme);
     }
     
-    if(object.toInstance() != nullptr)
-        throw RuntimeException(
-            expr.name,
-            "Can get only from class or instance.");
+    throw RuntimeException(
+        expr.name,
+        "Can get only from class or instance."
+    );
 } 
  
 TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {

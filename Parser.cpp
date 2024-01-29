@@ -375,7 +375,7 @@ Expr* Parser::term() {
 Expr* Parser::factor() {
     Expr* expr = unary();
 
-    while (match({SLASH, STAR})) {
+    while (match({SLASH, STAR, MOD})) {
         Token oper = previous();
         Expr* right = unary();
         expr = new Binary(expr, oper, right);

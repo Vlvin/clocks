@@ -83,11 +83,91 @@ public:
     virtual string toString() { return "<native fun print>"; }
 };
 
-// built-in instance
+// built-in instance Math
+// sincos funs
+class LoxSin : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(sin(arguments[0].toNumber()));
+    }
+    virtual string toString() {
+        return "<math method radSin>";
+    }
+};
+
+class LoxCos : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(cos(arguments[0].toNumber()));
+    }
+    virtual string toString() {
+        return "<math method radCos>";
+    }
+};
+
+class LoxSovSin : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(sin(arguments[0].toNumber()/180*M_PI));
+    }
+    virtual string toString() {
+        return "<math method sin>";
+    }
+};
+
+class LoxSovCos : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(cos(arguments[0].toNumber()/180*M_PI));
+    }
+    virtual string toString() {
+        return "<math method cos>";
+    }
+};
+
+class LoxtoRad : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(arguments[0].toNumber()/180*M_PI);
+    }
+    virtual string toString() {
+        return "<math method degToRad>";
+    }
+};
+
+class LoxtoDeg : public LoxCallable {
+    virtual int arity() {
+        return 1;
+    } 
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        return TokenLiteral(arguments[0].toNumber()/M_PI*180);
+    }
+    virtual string toString() {
+        return "<math method radToDeg>";
+    }
+};
+
 class LoxMath : public LoxInstance {
     map<string, TokenLiteral> fields = {
         {"PI", TokenLiteral(3.141593)},
-        {"E",  TokenLiteral(2.718281)}
+        {"E",  TokenLiteral(2.718281)},
+        {"radSin", TokenLiteral(new LoxSin())},
+        {"radCos", TokenLiteral(new LoxCos())},
+        {"sin", TokenLiteral(new LoxSovSin())},
+        {"cos", TokenLiteral(new LoxSovCos())},
+        {"radToDeg", TokenLiteral(new LoxtoDeg())},
+        {"degToRad", TokenLiteral(new LoxtoRad())}
+
     };
 public:
     LoxMath() : LoxInstance(nullptr) {}
@@ -98,10 +178,11 @@ public:
         if (fields.count(name.lexeme) > 0)
             return fields.find(name.lexeme)->second;
         Clockwork::error(name, "Can't find field.");
+        return TokenLiteral();
     }
     virtual TokenLiteral set(Token name, TokenLiteral value) override {
         Clockwork::error(name, "Can't set fields of native class.");
-        return "";
+        return TokenLiteral();
     }
 };
 

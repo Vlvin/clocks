@@ -67,5 +67,4 @@ class Static {
         print("I am static");
     }
 }
-
-Math.IP;
+print(323%5);

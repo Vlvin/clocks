@@ -29,6 +29,8 @@ private:
     TokenLiteral execute(Stmt *statement);
     TokenLiteral lookUpVariable(Token name, Expr* expr);
 
+    TokenLiteral moduloDivision(TokenLiteral left, TokenLiteral right);
+
     string stringify(TokenLiteral literal);
 
     bool isTruthy(TokenLiteral literal);
