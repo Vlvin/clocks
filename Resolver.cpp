@@ -94,11 +94,21 @@ TokenLiteral Resolver::visitFunctionTokenLiteral(Function &stmt) {
 };
 
 
-TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) { 
+TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
     ClassType enclosingClass = currentClass;
     currentClass = ClassType::CLASS;
     declare(stmt.name);
     define(stmt.name);
+    if (stmt.superclass != nullptr) {
+        if (stmt.superclass->name == stmt.name)
+            Clockwork::error(
+                stmt.name, 
+                "Class can't inherit from itself."); 
+        resolve(stmt.superclass);
+        currentClass = ClassType::SUBCLASS;
+        beginScope();
+        scopes.at(scopes.size()-1).insert({"super", true});
+    }
     beginScope();
     scopes.at(scopes.size()-1).insert({"this", true});
     for (Function* method: stmt.methods) {
@@ -117,6 +127,7 @@ TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
         resolveFunction(*loxStatic, declaration);
     } 
     endScope();
+    if (stmt.superclass != nullptr) endScope();
     currentClass = enclosingClass;
     return TokenLiteral();
 };
@@ -179,6 +190,7 @@ string Resolver::visitCallstring(Call &expr) {    return "";};
 string Resolver::visitGetstring(Get &expr) {    return "";};
 string Resolver::visitSetstring(Set &expr) {    return "";};
 string Resolver::visitThisstring(This &expr) {    return "";};
+string Resolver::visitSuperstring(Super &expr) {    return "";};
 string Resolver::visitGroupingstring(Grouping &expr) {    return "";};
 string Resolver::visitLiteralstring(Literal &expr) {    return "";};
 string Resolver::visitLogicalstring(Logical &expr) {    return "";};
@@ -225,6 +237,27 @@ TokenLiteral Resolver::visitThisTokenLiteral(This &expr) {
     return TokenLiteral();
 }
 
+
+TokenLiteral Resolver::visitSuperTokenLiteral(Super &expr) {
+    if (currentClass == ClassType::CNONE) {
+        Clockwork::error(
+            expr.keyword,
+            "Can't use 'super' outside of a class.");
+    }
+    if (currentClass == ClassType::CLASS) {
+        Clockwork::error(
+            expr.keyword,
+            "Can use 'super' only in subclass.");
+    }
+    if (currentFunction == FunctionType::STATICF) {
+        Clockwork::error(
+            expr.keyword,
+            "Can't use 'super' in static method.");
+    }
+    resolveLocal(&expr, expr.keyword);
+    return TokenLiteral();
+}
+
 TokenLiteral Resolver::visitGroupingTokenLiteral(Grouping &expr) {
     resolve(expr.expr);
     return TokenLiteral();
@@ -246,11 +279,12 @@ TokenLiteral Resolver::visitUnaryTokenLiteral(Unary &expr) {
 };
 
 TokenLiteral Resolver::visitVariableTokenLiteral(Variable &expr) {
-    if ((!scopes.empty()) && ((scopes.at(scopes.size()-1).find(expr.name.lexeme)->second) == false)) {
-            Clockwork::error(
-                expr.name,
-                "Can't read local variable in its own initializer."
-            );
+    if ((!scopes.empty()) && ((scopes.at(scopes.size()-1).count(expr.name.lexeme)) > 0)) {
+            if ((scopes.at(scopes.size()-1).find(expr.name.lexeme)->second) == false)
+                Clockwork::error(
+                    expr.name,
+                    "Can't read local variable in its own initializer."
+                );
         }
     resolveLocal(&expr, expr.name);
     return TokenLiteral();

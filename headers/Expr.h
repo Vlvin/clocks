@@ -70,6 +70,17 @@ public:
 
 };
 
+class Super : public Expr {
+public:
+   Token keyword;
+   Token method;
+   Super(Token keyword, Token method);
+
+   string acceptstring(VisitorExpr *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorExpr *visitor);
+
+};
+
 class This : public Expr {
 public:
    Token keyword;

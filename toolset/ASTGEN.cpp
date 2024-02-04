@@ -13,6 +13,7 @@ vector<string> exprtypes = {
     "Call     : Expr* callee, Token paren, vector<Expr*> arguments",
     "Get      : Expr* object, Token name",
     "Set      : Expr* object, Token name, Expr* value",
+    "Super    : Token keyword, Token method",
     "This     : Token keyword",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
@@ -26,7 +27,7 @@ vector<string> exprtypes = {
 vector<string> stmtypes = {
     "Expression : Expr* expression",
     "Function   : Token name, vector<Token> params, vector<Stmt*> body, bool isConst",
-    "Class      : Token name, vector<Function*> statics, vector<Function*> methods",
+    "Class      : Token name, Variable* superclass, vector<Function*> statics, vector<Function*> methods",
     "Return     : Token keyword, Expr* value",
     "Print      : Expr* expression",
     "Var        : Token name, Expr* initializer, bool isConst",

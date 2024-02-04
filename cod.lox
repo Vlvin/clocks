@@ -5,7 +5,7 @@
 // list of examples is here
 
 // lox has dynamic variable definitions and assignments
-
+/*
 var a; // now just nil
 a = "five"; // now it equals "five"
 a = true; // now it equals true
@@ -50,7 +50,6 @@ print();
  * but do not give them your attention 
  * it is OK
 */
-/*
 fun fib(n) { 
     if (n <= 1) 
     {
@@ -58,13 +57,37 @@ fun fib(n) {
     } 
     return (fib(n-1) + fib(n-2)); 
 }
-print(fib(30)); 
-*/
+
+print(fib(40)); 
 
 // Bellissimo: Static Methods
+/*
 class Static {
     static member() {
         print("I am static");
     }
 }
-print(323%5);
+
+
+class Mother {
+    Hello() {
+        print("Hello, I am mother");
+    }
+}
+
+class Daughter < Mother {
+    Hello() {
+        print("Message from Daughter");
+        super.Hello();
+    }
+}
+
+class GrandDaughter < Daughter {
+    Hello() {
+        print("Message from GrandDaughter");
+        super.Hello();
+    }
+}
+
+GrandDaughter().Hello();
+*/

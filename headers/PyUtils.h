@@ -42,7 +42,11 @@ namespace PyUtils {
     }
 
     static bool endswith(string text, string ending) {
-        return (strrange(text, (text.length() - ending.length()), text.length())) == ending;   
+        bool ok = false;
+        try {
+            ok = (strrange(text, (text.length() - ending.length()), text.length())) == ending;   
+        } catch(...) {}
+        return ok;
     }
 
     static string lcase(string tol) {

@@ -21,6 +21,7 @@ int LoxFunction::arity() {
 TokenLiteral LoxFunction::bind(LoxInstance* binding) {
     Environment *environment = new Environment(closure);
     environment->define("this", binding);
+    if (true);
     return TokenLiteral(new LoxFunction(declaration, environment, isInitializer));
 }
 

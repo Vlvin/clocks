@@ -18,4 +18,5 @@ public:
     static const char* TTT[41];
     Token(TokenType type, string lexeme, TokenLiteral literal, int line);
     string toString();
+    bool operator==(Token other);
 };

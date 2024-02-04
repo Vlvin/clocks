@@ -7,7 +7,7 @@
 using namespace std;
 
 #include "LoxCallable.h"
-#include "LoxCallable.h"
+#include "LoxClass.h"
 #include "LoxInstance.h"
 #include "Stmt.h"
 #include "Clockswork.h"
@@ -66,6 +66,36 @@ public:
         return TokenLiteral(line);
     }
     virtual string toString() { return "<native fun type>"; }
+};
+
+class InstanceOf : public LoxCallable {
+public:
+    virtual int arity() { return 1; } // admin option "any number of arguments"
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        LoxInstance* target = arguments[0].toInstance();
+        if (target != nullptr)
+            return TokenLiteral(((target->LClass)->name));
+        return TokenLiteral();
+    }
+    virtual string toString() { return "<native fun instanceOf>"; }
+};
+
+class SuperName : public LoxCallable {
+public:
+    virtual int arity() { return 1; } // admin option "any number of arguments"
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        LoxClass* targetClass = (LoxClass*)(arguments[0].toCallable());
+        if (targetClass != nullptr)
+            if (targetClass->superclass != nullptr)
+                return TokenLiteral(targetClass->superclass->name);
+        delete targetClass;
+        LoxInstance* targetInstance = (arguments[0].toInstance());
+        if (targetInstance != nullptr)
+            if (targetInstance->LClass->superclass != nullptr)
+                return TokenLiteral(targetInstance->LClass->superclass->name);
+        return TokenLiteral();
+    }
+    virtual string toString() { return "<native fun superName>"; }
 };
 
 class LoxPrint : public LoxCallable {

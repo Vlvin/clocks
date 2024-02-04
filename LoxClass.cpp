@@ -4,7 +4,8 @@
 
 #include <vector>
 
-LoxClass::LoxClass(string name, map<string, LoxFunction*> statics, map<string, LoxFunction*> methods) : name(name), statics(statics), methods(methods) {}
+LoxClass::LoxClass(string name, LoxClass* superclass, map<string, LoxFunction*> statics, map<string, LoxFunction*> methods) 
+    : name(name), superclass(superclass), statics(statics), methods(methods) {}
 
 int LoxClass::arity() {
     LoxFunction *constructor = findMethod("constructor");
@@ -16,14 +17,23 @@ LoxFunction* LoxClass::findStaticMethod(string name) {
     if (statics.count(name) > 0) {
         return statics.find(name)->second;
     }
+    if (superclass != nullptr)
+        return superclass->findStaticMethod(name);
     return nullptr;
 }
 
 LoxFunction* LoxClass::findMethod(string name) {
-    if (methods.count(name) > 0) {
+    if (methods.count(name) > 0)
         return methods.find(name)->second;
-    }
-    return findStaticMethod(name);
+    
+    if (findStaticMethod(name) != nullptr)
+        return findStaticMethod(name);
+
+    if (superclass != nullptr)
+        return superclass->findMethod(name);
+    
+    return nullptr;
+    
 }
 
 TokenLiteral LoxClass::call(Interpreter *interpreter, vector<TokenLiteral> arguments) {

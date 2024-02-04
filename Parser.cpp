@@ -130,6 +130,11 @@ Stmt* Parser::varDeclaration(bool isConst) {
 
 Stmt* Parser::classDeclaration() {
     Token name = consume(IDENTIFIER, "Expect class name");
+    Variable* superclass = nullptr;
+    if (match({LESS})) {
+        consume(IDENTIFIER, "Expect superclass name after '<' in class declaration");
+        superclass = new Variable(previous());
+    }
     consume(LEFT_BRACE, "Expect '{' before class body");
     vector<Function*> methods = {};
     vector<Function*> statics = {};
@@ -154,8 +159,9 @@ Stmt* Parser::classDeclaration() {
             }
         }
     }
+    
     consume(RIGHT_BRACE, "Expect '}' after class body");
-    return new Class(name, statics, methods);
+    return new Class(name, superclass, statics, methods);
 }
 
 Stmt* Parser::function(string kind, bool isConst) {
@@ -434,6 +440,12 @@ Expr* Parser::finishCall(Expr* callee) {
 
 Expr* Parser::primary() {
     if (match({THIS})) return new This(previous());
+    if (match({SUPER})) {
+        Token keyword = previous();
+        consume(DOT, "Expect '.' after 'super'.");
+        Token method = consume(IDENTIFIER, "Expect superclass method name.");
+        return new Super(keyword, method);
+    }
     if (match({FALSE})) return new Literal(TokenLiteral(false));
     if (match({TRUE})) return new Literal(TokenLiteral(true));
     if (match({TokenType::NIL})) return new Literal(TokenLiteral());

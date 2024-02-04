@@ -50,6 +50,7 @@ public:
     virtual string visitGetstring(Get &expr) override;
     virtual string visitSetstring(Set &expr) override;
     virtual string visitThisstring(This &expr) override;
+    virtual string visitSuperstring(Super &expr) override;
     virtual string visitGroupingstring(Grouping &expr) override;
     virtual string visitLiteralstring(Literal &expr) override;
     virtual string visitUnarystring(Unary &expr) override;
@@ -72,6 +73,7 @@ public:
     virtual TokenLiteral visitGetTokenLiteral(Get &expr) override;
     virtual TokenLiteral visitSetTokenLiteral(Set &expr) override;
     virtual TokenLiteral visitThisTokenLiteral(This &expr) override;
+    virtual TokenLiteral visitSuperTokenLiteral(Super &expr) override;
     virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) override;
     virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) override;
     virtual TokenLiteral visitUnaryTokenLiteral(Unary &expr) override;

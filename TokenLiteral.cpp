@@ -21,6 +21,7 @@ TokenLiteral::TokenLiteral(LoxInstance* li) : d(), s(), lc(), li(li), type(Token
 
 TokenLiteral::TokenLiteral(bool b) : d(b), s(), lc(), li(), type(TokenLiteral::BOOLEAN), isReturn(false), isConst(false)  {}
 
+
 TokenLiteral::TokenLiteral(TokenLiteral tl, vector<bool> flags) : type(tl.type) {
     isConst = false, isReturn = false;
     switch (flags.size()) {

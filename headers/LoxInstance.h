@@ -9,9 +9,9 @@ using namespace std;
 class LoxClass;
 
 class LoxInstance {
-    LoxClass* LClass;
     map<string, TokenLiteral> fields = {};
 public:
+    LoxClass* LClass;
     LoxInstance(LoxClass* LClass);
     virtual string toString();
     virtual TokenLiteral get(Token name);

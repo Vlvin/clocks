@@ -27,6 +27,7 @@ string Interpreter::visitCallstring(Call &expr) { return ""; }
 string Interpreter::visitGetstring(Get &expr) { return ""; }
 string Interpreter::visitSetstring(Set &expr) { return ""; }
 string Interpreter::visitThisstring(This &expr) { return ""; }
+string Interpreter::visitSuperstring(Super &expr) { return ""; }
 string Interpreter::visitGroupingstring(Grouping &expr){ return ""; }
 string Interpreter::visitLiteralstring(Literal &expr){ return ""; }
 string Interpreter::visitLogicalstring(Logical &expr) { return ""; }
@@ -65,6 +66,14 @@ Interpreter::Interpreter() {
         "Math",
         TokenLiteral(new LoxMath(), {false, true})
     );
+    globals->define(
+        "instanceOf",
+        TokenLiteral(new InstanceOf(), {false, true})
+    );
+    globals->define(
+        "superName",
+        TokenLiteral(new SuperName(), {false, true})
+    );
     // globals->define(
     //     "PI",
     //     TokenLiteral(3.1415926535897932384626433, {false, true})
@@ -97,13 +106,6 @@ TokenLiteral Interpreter::lookUpVariable(Token name, Expr* expr) {
 
 string Interpreter::stringify(TokenLiteral literal) {
     if (literal.type == TokenLiteral::NIL) return "nil";
-    if (literal.type == TokenLiteral::NUMBER) {
-        string text = literal.toString();
-        if (endswith(text, ".000000")) {
-            text = strrange(text, 0, text.length() - 7);
-        }
-        return text;
-    }
     return literal.toString();
 }
 
@@ -220,8 +222,17 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
     if(object.toInstance() != nullptr) {
         return object.toInstance()->get(expr.name);
     }
-    if(dynamic_cast<LoxClass*>(object.toCallable()) != nullptr) {
-        return dynamic_cast<LoxClass*>(object.toCallable())->findStaticMethod(expr.name.lexeme);
+    LoxClass* staticTarget = dynamic_cast<LoxClass*>(object.toCallable());
+    if(staticTarget != nullptr) {
+        LoxFunction* staticTargetMethod = staticTarget->findStaticMethod(expr.name.lexeme);
+        if (staticTargetMethod != nullptr)
+            return staticTargetMethod;
+        else
+            throw RuntimeException(
+                expr.name,
+                "Undefined static member '" + expr.name.lexeme + "'."
+            );
+
     }
     
     throw RuntimeException(
@@ -244,6 +255,21 @@ TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
 
 TokenLiteral Interpreter::visitThisTokenLiteral(This &expr) {
     return lookUpVariable(expr.keyword, &expr);
+}
+
+TokenLiteral Interpreter::visitSuperTokenLiteral(Super &expr) {
+    int distance = locals.find(&expr)->second;
+    // cout << distance << "\n";
+    LoxClass* superclass = (LoxClass*)(environment->getAt(distance, "super").toCallable());
+    // cout << superclass << "\n";
+    LoxInstance *object = environment->getAt(distance - 1, "this").toInstance();
+    // cout << object << "\n";
+    LoxFunction *method = superclass->findMethod(expr.method.lexeme);
+    // cout << method << "\n";
+
+    if (method == nullptr)
+        throw RuntimeException(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
+    return method->bind(object);
 }
 
 TokenLiteral Interpreter::visitGroupingTokenLiteral(Grouping &expr) {
@@ -291,7 +317,20 @@ TokenLiteral Interpreter::visitFunctionTokenLiteral(Function &stmt) {
 }
 
 TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
+    TokenLiteral superclass = TokenLiteral();
+    LoxClass* parent = nullptr;
+    if (stmt.superclass != nullptr) {
+        superclass = evaluate(stmt.superclass);
+        if (superclass.toCallable() != nullptr)
+            parent = dynamic_cast<LoxClass*>(superclass.toCallable());
+        if (parent == nullptr)
+            throw RuntimeException(stmt.name, "Superclass must be a class.");
+    }
     environment->define(stmt.name.lexeme, TokenLiteral());
+    if (stmt.superclass != nullptr) {
+        environment = new Environment(environment);
+        environment->define("super", superclass);
+    }
     map<string, LoxFunction*> methods = {};
     map<string, LoxFunction*> statics = {};
     for (Function* method: stmt.methods) {
@@ -307,7 +346,10 @@ TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
 
         statics.insert({sMethod->name.lexeme, function});
     }
-    LoxClass *LClass = new LoxClass(stmt.name.lexeme, statics, methods);
+    LoxClass *LClass = new LoxClass(stmt.name.lexeme, parent, statics, methods);
+    if (stmt.superclass!=nullptr) {
+        environment = environment->enclosing;
+    }
     environment->assign(stmt.name, LClass);
     return TokenLiteral();
 }

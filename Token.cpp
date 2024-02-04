@@ -34,6 +34,10 @@ const char* Token::TTT[41] = {
     
 };
 
+bool Token::operator==(Token other) {
+  return (this->lexeme == other.lexeme);
+}
+
 string Token::toString() {
     return string(TTT[type]) + " " + lexeme + " " + literal.toString() + " " + to_string(line);
 }

@@ -14,6 +14,7 @@ class Binary;
 class Call;
 class Get;
 class Set;
+class Super;
 class This;
 class Grouping;
 class Literal;
@@ -28,6 +29,7 @@ public:
    virtual string visitCallstring(Call &expr) = 0;
    virtual string visitGetstring(Get &expr) = 0;
    virtual string visitSetstring(Set &expr) = 0;
+   virtual string visitSuperstring(Super &expr) = 0;
    virtual string visitThisstring(This &expr) = 0;
    virtual string visitGroupingstring(Grouping &expr) = 0;
    virtual string visitLiteralstring(Literal &expr) = 0;
@@ -40,6 +42,7 @@ public:
    virtual TokenLiteral visitCallTokenLiteral(Call &expr) = 0;
    virtual TokenLiteral visitGetTokenLiteral(Get &expr) = 0;
    virtual TokenLiteral visitSetTokenLiteral(Set &expr) = 0;
+   virtual TokenLiteral visitSuperTokenLiteral(Super &expr) = 0;
    virtual TokenLiteral visitThisTokenLiteral(This &expr) = 0;
    virtual TokenLiteral visitGroupingTokenLiteral(Grouping &expr) = 0;
    virtual TokenLiteral visitLiteralTokenLiteral(Literal &expr) = 0;
