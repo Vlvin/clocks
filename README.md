@@ -25,7 +25,7 @@ CLocks abilities
  
  Clocks can do everything that lox can and even more.
 
- 
+
  Literal Types
  - NUMBER : represents real number (6 digits after floating point)
      - can be used in all math operations
@@ -45,9 +45,6 @@ CLocks abilities
      - variable holds NIL can be assigned to anything even if constant
      
  Math
- - Constants
-     - PI = 3.14
-     - E = 2.71
  - Binary operations
      - '=' : for assignment
      - '+' : for addition
@@ -74,7 +71,10 @@ CLocks abilities
  - I/O
      - print(...) : prints out argues separated by space character, with Enter character at the end
      - input(...) : prints out argues separated by space character and waits for input, converting it to a NUMBER if it can
- - Math
+ - Math (native instance)
+    - Constants
+        - PI = 3.14
+        - E = 2.71
      - sin(n) : returns sine of n degrees
      - cos(n) : returns cosine of n degrees
      - radSin(n) : returns sine of n radians
