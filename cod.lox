@@ -85,11 +85,9 @@ class Daughter < Mother {
     }
 }
 
-class GrandDaughter < Daughter {
+const class GrandDaughter < Daughter {
     Hello() {
-        print(super, super());
+        super().Hello();
     }
 }
-
 GrandDaughter().Hello();
-

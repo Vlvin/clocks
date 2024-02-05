@@ -54,7 +54,8 @@ public:
    Variable* superclass;
    vector<Function*> statics;
    vector<Function*> methods;
-   Class(Token name, Variable* superclass, vector<Function*> statics, vector<Function*> methods);
+   bool isConst;
+   Class(Token name, Variable* superclass, vector<Function*> statics, vector<Function*> methods, bool isConst);
 
    string acceptstring(VisitorStmt *visitor);
    TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);

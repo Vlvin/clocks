@@ -101,7 +101,7 @@ Stmt* Parser::declaration() {
     try {
         if (match({FUN})) return function("function", false);
         if (match({VAR})) return varDeclaration(false);
-        if (match({CLASS})) return classDeclaration();
+        if (match({CLASS})) return classDeclaration(false);
         if (match({CONST})) return constDeclaration();
         return statement();
     } catch (ParseError error) {
@@ -113,6 +113,7 @@ Stmt* Parser::declaration() {
 Stmt* Parser::constDeclaration() {
     if (match({VAR})) return varDeclaration(true);
     if (match({FUN})) return function("function", true);
+    if (match({CLASS})) return classDeclaration(true);
     throw error(peek(), "Expected type after keyword 'const'.");
 }
 
@@ -128,7 +129,7 @@ Stmt* Parser::varDeclaration(bool isConst) {
     return new Var(name, initializer, isConst);
 }
 
-Stmt* Parser::classDeclaration() {
+Stmt* Parser::classDeclaration(bool isConst) {
     Token name = consume(IDENTIFIER, "Expect class name");
     Variable* superclass = nullptr;
     if (match({LESS})) {
@@ -161,7 +162,7 @@ Stmt* Parser::classDeclaration() {
     }
     
     consume(RIGHT_BRACE, "Expect '}' after class body");
-    return new Class(name, superclass, statics, methods);
+    return new Class(name, superclass, statics, methods, isConst);
 }
 
 Stmt* Parser::function(string kind, bool isConst) {

@@ -31,8 +31,8 @@ TokenLiteral Function::acceptTokenLiteral(VisitorStmt *visitor) {   return visit
 }
 
 
-Class::Class(Token name, Variable* superclass, vector<Function*> statics, vector<Function*> methods)
-     : name(name),superclass(superclass),statics(statics),methods(methods) {}
+Class::Class(Token name, Variable* superclass, vector<Function*> statics, vector<Function*> methods, bool isConst)
+     : name(name),superclass(superclass),statics(statics),methods(methods),isConst(isConst) {}
 
 string Class::acceptstring(VisitorStmt *visitor) {   return visitor->visitClassstring(*this);
 }

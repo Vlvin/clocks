@@ -59,6 +59,10 @@ Interpreter::Interpreter() {
         TokenLiteral(new LoxPrint(), {false, true})
     );
     globals->define(
+        "input",
+        TokenLiteral(new LoxInput(), {false, true})
+    );
+    globals->define(
         "type",
         TokenLiteral(new LoxType(), {false, true})
     );
@@ -259,16 +263,7 @@ TokenLiteral Interpreter::visitThisTokenLiteral(This &expr) {
 
 TokenLiteral Interpreter::visitSuperTokenLiteral(Super &expr) {
     int distance = locals.find(&expr)->second;
-    // cout << distance << "\n";
     LoxClass* superclass = (LoxClass*)(environment->getAt(distance, "super").toCallable());
-    // cout << superclass << "\n";
-    LoxInstance *object = environment->getAt(distance - 1, "this").toInstance();
-    // cout << object << "\n";
-    // LoxFunction *method = superclass->findMethod(expr.method.lexeme);
-    // cout << method << "\n";
-
-    // if (method == nullptr)
-    //     throw RuntimeException(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
     return superclass;
 }
 
@@ -326,7 +321,7 @@ TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
         if (parent == nullptr)
             throw RuntimeException(stmt.name, "Superclass must be a class.");
     }
-    environment->define(stmt.name.lexeme, TokenLiteral());
+    environment->define(stmt.name, TokenLiteral(TokenLiteral(), {false, stmt.isConst}));
     if (stmt.superclass != nullptr) {
         environment = new Environment(environment);
         environment->define("super", superclass);
@@ -350,7 +345,7 @@ TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
     if (stmt.superclass!=nullptr) {
         environment = environment->enclosing;
     }
-    environment->assign(stmt.name, LClass);
+    environment->assign(stmt.name, TokenLiteral(TokenLiteral(LClass), {false, stmt.isConst}));
     return TokenLiteral();
 }
 

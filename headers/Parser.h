@@ -38,7 +38,7 @@ class Parser {
     Stmt* declaration();
     Stmt* constDeclaration();
     Stmt* varDeclaration(bool isConst);
-    Stmt* classDeclaration();
+    Stmt* classDeclaration(bool isConst);
     Stmt* function(string kind, bool isConst);
     Stmt* forStatement();
     Stmt* ifStatement();

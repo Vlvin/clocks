@@ -2,6 +2,7 @@
 
 #include <sys/time.h>
 #include <vector>
+#include <math.h>
 #include <map>
 
 using namespace std;
@@ -18,7 +19,7 @@ public:
     virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
         timeval t;
         gettimeofday(&t, nullptr);
-        double time = t.tv_sec % 60 + (double)t.tv_usec / 1000000;
+        double time = t.tv_sec + (double)t.tv_usec / 1000000;
         return TokenLiteral(time);
     }
     virtual string toString() { return "<native fun clock>"; }
@@ -109,6 +110,27 @@ public:
         line = line.substr(0, line.length()-1);
         cout << line << endl;
         return TokenLiteral();
+    }
+    virtual string toString() { return "<native fun print>"; }
+};
+
+class LoxInput : public LoxCallable {
+public:
+    virtual int arity() { return -253; } // admin option "any number of arguments"
+    virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
+        string line = "";
+        for (TokenLiteral argument: arguments) {
+            line += argument.toString() + " ";
+        }
+        line = line.substr(0, line.length()-1);
+        cout << line;
+        string input;
+        cin >> input;
+        try {
+            double int_input = stod(input);
+            return TokenLiteral(int_input);
+        } catch (invalid_argument ie) {}
+        return TokenLiteral(input);
     }
     virtual string toString() { return "<native fun print>"; }
 };
