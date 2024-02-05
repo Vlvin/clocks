@@ -1,8 +1,6 @@
 CLocks 
 ===
  CLocks is dialect of lox - dynamic typed, high-level language, made by Robert Nystrom and explained in his book Crafting Interpreters
-
- Clocks can do everything that lox can and even more.
  
  # Build
   ## Dependencies
@@ -24,6 +22,10 @@ CLocks
 
 CLocks abilities
 ===
+ 
+ Clocks can do everything that lox can and even more.
+
+ 
  Literal Types
  - NUMBER : represents real number (6 digits after floating point)
      - can be used in all math operations
