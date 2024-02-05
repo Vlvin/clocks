@@ -118,5 +118,5 @@ CLocks abilities
  - Static methods: "static" keyword before method declaration means this method have no "this" binding, and can be called directrly from class 
  - Inheritance: class can inherit from other class with operator '<', in this case it gets all methods of superclass, and it's own methods now have keyword "super" which returns superclass
 
-- Others
-    - log: log statement followed by identifier of literal, prints it out
+ Others
+ - log: log statement followed by identifier of literal, prints it out
