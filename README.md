@@ -5,21 +5,21 @@ CLocks
  Clocks can do everything that lox can and even more.
  
  # Build
- ## Dependencies
- ```CLocks``` depends on Cmake (3.0.2+)
+  ## Dependencies
+  ```CLocks``` depends on Cmake (3.0.2+)
 
- ## Instalation
- In general you need to download ```CLocks``` project, enter directory contains it, then build it using cmake
- ```bash
-    git clone https://github.com/Vlvin/clocks.git
-    cd clocks
-    mkdir build
-    cd build
-    cmake ../
-    cmake --build .
- ```
+  ## Instalation
+  In general you need to download ```CLocks``` project, enter directory contains it, then build it using cmake
+  ```bash
+     git clone https://github.com/Vlvin/clocks.git
+     cd clocks
+     mkdir build
+     cd build
+     cmake ../
+     cmake --build .
+  ```
 
- Now in clocks/bin/ directory you have built CLocks executable file
+  Now in clocks/bin/ directory you have built CLocks executable file
 
 
 CLocks abilities
