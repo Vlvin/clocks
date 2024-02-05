@@ -264,12 +264,12 @@ TokenLiteral Interpreter::visitSuperTokenLiteral(Super &expr) {
     // cout << superclass << "\n";
     LoxInstance *object = environment->getAt(distance - 1, "this").toInstance();
     // cout << object << "\n";
-    LoxFunction *method = superclass->findMethod(expr.method.lexeme);
+    // LoxFunction *method = superclass->findMethod(expr.method.lexeme);
     // cout << method << "\n";
 
-    if (method == nullptr)
-        throw RuntimeException(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
-    return method->bind(object);
+    // if (method == nullptr)
+    //     throw RuntimeException(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
+    return superclass;
 }
 
 TokenLiteral Interpreter::visitGroupingTokenLiteral(Grouping &expr) {

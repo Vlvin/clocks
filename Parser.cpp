@@ -440,12 +440,7 @@ Expr* Parser::finishCall(Expr* callee) {
 
 Expr* Parser::primary() {
     if (match({THIS})) return new This(previous());
-    if (match({SUPER})) {
-        Token keyword = previous();
-        consume(DOT, "Expect '.' after 'super'.");
-        Token method = consume(IDENTIFIER, "Expect superclass method name.");
-        return new Super(keyword, method);
-    }
+    if (match({SUPER})) return new Super(previous());
     if (match({FALSE})) return new Literal(TokenLiteral(false));
     if (match({TRUE})) return new Literal(TokenLiteral(true));
     if (match({TokenType::NIL})) return new Literal(TokenLiteral());

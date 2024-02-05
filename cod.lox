@@ -1,5 +1,5 @@
 // USAGE OF RESERVED NAMES
-// IN VAR AND FUN NAMES
+// AS IDENTIFIER
 // IS USUAL CAUSE OF CANCER
 
 // list of examples is here
@@ -42,7 +42,7 @@ a = (5 + 5 - 5) / 5 * 1; // 1
 
 // I forgot about lox can CONCAT STRINGS!!
 a = "Hi, " + "dear" + " reader";
-print(a); 
+print(a);
 print();
 /*
  * next you can see field 
@@ -50,6 +50,7 @@ print();
  * but do not give them your attention 
  * it is OK
 */
+/*
 fun fib(n) { 
     if (n <= 1) 
     {
@@ -59,17 +60,19 @@ fun fib(n) {
 }
 
 print(fib(40)); 
-
+*/
 // Bellissimo: Static Methods
-/*
+
 class Static {
     static member() {
         print("I am static");
     }
 }
 
-
 class Mother {
+    constructor() {
+	this.fuck = true;
+    }
     Hello() {
         print("Hello, I am mother");
     }
@@ -78,16 +81,15 @@ class Mother {
 class Daughter < Mother {
     Hello() {
         print("Message from Daughter");
-        super.Hello();
+        print("fuck", super().fuck);
     }
 }
 
 class GrandDaughter < Daughter {
     Hello() {
-        print("Message from GrandDaughter");
-        super.Hello();
+        print(super, super());
     }
 }
 
 GrandDaughter().Hello();
-*/
+

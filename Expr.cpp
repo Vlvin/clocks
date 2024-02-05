@@ -49,8 +49,8 @@ TokenLiteral Set::acceptTokenLiteral(VisitorExpr *visitor) {   return visitor->v
 }
 
 
-Super::Super(Token keyword, Token method)
-     : keyword(keyword),method(method) {}
+Super::Super(Token keyword)
+     : keyword(keyword) {}
 
 string Super::acceptstring(VisitorExpr *visitor) {   return visitor->visitSuperstring(*this);
 }

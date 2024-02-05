@@ -13,7 +13,7 @@ vector<string> exprtypes = {
     "Call     : Expr* callee, Token paren, vector<Expr*> arguments",
     "Get      : Expr* object, Token name",
     "Set      : Expr* object, Token name, Expr* value",
-    "Super    : Token keyword, Token method",
+    "Super    : Token keyword",
     "This     : Token keyword",
     "Grouping : Expr* expr",
     "Literal  : TokenLiteral value",
