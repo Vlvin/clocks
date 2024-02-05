@@ -13,6 +13,16 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/archive)
         
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR})
 set(SOURCEPATH ${PROJECT_SOURCE_DIR}/source)
+
+add_executable(ASTGen ${PROJECT_SOURCE_DIR}/toolset/ASTGEN.cpp)
+
+add_custom_command(
+    TARGET ASTGen
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ASTGen
+    COMMENT "Build target AST"
+    VERBATIM
+)
+
 set(SOURCES 
     ${SOURCEPATH}/Clockswork.cpp
     ${SOURCEPATH}/Main.cpp
