@@ -10,7 +10,6 @@ cases
 test
 builddebug
 log.txt
-.vscode/c_cpp_properties.json
 .vscode
 CMakeFiles
 Makefile
