@@ -20,6 +20,18 @@ CLocks
   Now in clocks/bin/ directory you have built CLocks executable file
 
 
+Usage
+===
+Execute file:
+```bash
+    CLocks file.lox
+```
+
+Run promt (stil beta):
+```bash
+    CLocks
+```
+
 CLocks abilities
 ===
  
