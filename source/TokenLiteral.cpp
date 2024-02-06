@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -53,8 +54,11 @@ string TokenLiteral::toString() {
     switch (type) {
         case TokenLiteral::NUMBER:
             line = to_string(d);
-            if (PyUtils::endswith(line, ".000000"))
+            if (PyUtils::endswith(line, ".000000")) {
                 line = PyUtils::strrange(line, 0, line.length() - 7);
+                if (line[0] == '-' && (abs(d - round(d)) < 0.000001) && (round(d) == 0))
+                    line = PyUtils::strrange(line, 1, line.length());
+                }
             return line;
         case TokenLiteral::STRING:
             return s;

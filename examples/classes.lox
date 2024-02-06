@@ -1,0 +1,150 @@
+/*
+ * Classes in CLocks
+*/
+
+
+// Class definition
+class Fuu {
+
+}
+
+print(Fuu); // <class Fuu>
+
+// Instantiation
+var instance_of_class = Fuu();
+
+print(instance_of_class); // <instance of Fuu>
+
+// Fields
+instance_of_class.bar = 123;
+
+print(instance_of_class.bar); // 123
+
+
+print();
+
+// class can have methods
+class With_Methods {
+    some_method(argument) {
+        // field Assignment to an argument
+        this.field = argument;
+    }
+    print_field() {
+        print(this.field);
+    }
+}
+
+var foo = With_Methods();
+
+// get method as a field
+foo.some_method("Hello world");
+// foo.field = "Hello world";
+
+foo.print_field(); // Hello world
+print(foo.field); // Hello world
+
+print();
+
+// Constructor
+class With_Constructor {
+    // code name for constructor is... constructor
+    constructor(argument) {
+        this.in_instantiated = argument;
+    } 
+}
+
+var foo_bar = With_Constructor(true);
+print(foo_bar.in_instantiated); // true
+print(type(foo_bar.in_instantiated)); // BOOLEAN
+
+print();
+
+// Static methods
+class Namespace {
+    constructor() {
+        print("are you serious?");
+    }
+    // use static keyword 
+    // to declare method being static
+    static method() {
+        print("I am static");
+    }
+}
+
+// static methods can be called from a class
+Namespace.method();
+
+// but static methods stil can be called from an instance
+Namespace().method();
+
+print();
+
+// Inheritance
+class Base {
+    base_method() {
+        print("I am from base");
+    }
+}
+
+// Inheritance can be proceed using '<' operator
+class Derived < Base {
+    call_of_base() {
+        // all calls from superclass 
+        // can be proceed using "super" keyword
+        super().base_method();
+    }
+    // shadowing
+    base_method() {
+        print("I am from derived");
+    }
+}
+
+var instance_of_derived = Derived();
+
+instance_of_derived.call_of_base(); // I am from base
+
+instance_of_derived.base_method(); // I am from derived
+
+print(superName(Derived)); // Base
+
+print();
+/*
+ * since class is callable, 
+ * and callable in Literal type,
+ * variable can be assigned to a class,
+ * and class is a variable type
+*/
+
+var class_in_variable = Namespace; // No instantiation
+print(class_in_variable); // <class Namespace>
+print(type(class_in_variable)); // CALLABLE
+
+// and you stil able to
+// change your class as a variable
+
+print(Namespace); // <class Namespace> 
+Namespace = 0;
+print(Namespace); // 0
+
+print();
+
+// that's why I enhance const keyword abilities
+
+const class New_Namespace {
+    constructor() {
+        print("are you serious?");
+    }
+    static method() {
+        print("Great Reborn");
+    }
+}
+
+New_Namespace.method(); // Great Reborn
+
+// You are stil able to set its Fields
+var newNamespace = New_Namespace(); // are you serious?
+newNamespace.field = 5;
+print(newNamespace.field); // 5
+
+
+New_Namespace = 5; // but this now will raise Runtime Error

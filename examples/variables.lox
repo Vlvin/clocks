@@ -1,0 +1,31 @@
+/*
+ * Variables in CLocks
+*/
+
+
+// Definition
+var a;
+print(a); // nil
+print(type(a)); // NIL
+
+print();
+
+// Assignment
+a = 5;
+print(a); // 5
+print(type(a)); // NUMBER
+
+
+print();
+
+// Constant variable definition
+const var b;
+
+// Constant variable initialization
+b = "Hello, my dear reader!";
+print(b); // Hello, my dear reader!
+print(type(b)); // STRING
+
+// Now Assign to variable b will raise Runtime Error
+b = "You will not see this being printed out";
+print(b); // this line will not be executed

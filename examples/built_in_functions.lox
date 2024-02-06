@@ -1,0 +1,70 @@
+/*
+ * Built-ins in CLocks 
+*/
+
+
+// CLocks have couple of built-in Functions
+
+// print(n) : prints out its arguements separated by space character with '\n' at the end of line
+print("Hello");
+print("World");
+/*
+ * Hello
+ * World
+*/
+
+print();
+print("Hello" + "World");
+/*
+ * HelloWorld
+*/
+
+print();
+print("Hello", "World");
+/*
+ * Hello World
+*/
+
+print();
+// input(n) : prints out its arguements separated by space character with '\n' at the end of line and waits for user input
+var in = input("enter something: ");
+print("you entered:", in); // you entered: ...
+
+print();
+// type(n) : returns type of n as a string
+print(type(in)); // type of in 
+
+
+print();
+// instanceOf() : returns name of instance class
+class Some_class {
+
+}
+var a = Some_class();
+
+print(instanceOf(a));
+
+print();
+// superName() : returns name of instance (or class) superclass, if it exists, nil otherwise
+class Base {
+
+}
+class Derived < Base {
+
+}
+var b = Derived();
+
+print(superName(Derived)); // Base
+print(superName(b)); // Base
+print(superName(a)); // nil
+
+print();
+// clock() : returns time of day in seconds
+print(clock()); // time
+
+print();
+// exit(n) : immediatly stops program execution with exit code n, if it was passed in, 0 otherwise
+exit(65);
+
+print("You will never see this being printed out");
+

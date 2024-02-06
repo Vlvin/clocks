@@ -75,7 +75,8 @@ public:
     virtual TokenLiteral call(Interpreter *interpreter, vector<TokenLiteral> arguments) {
         LoxInstance* target = arguments[0].toInstance();
         if (target != nullptr)
-            return TokenLiteral(((target->LClass)->name));
+            if ((target->LClass) != nullptr)
+                return TokenLiteral(((target->LClass)->name));
         return TokenLiteral();
     }
     virtual string toString() { return "<native fun instanceOf>"; }
@@ -130,6 +131,10 @@ public:
             double int_input = stod(input);
             return TokenLiteral(int_input);
         } catch (invalid_argument ie) {}
+        if (input.compare("true") == 0)
+            return TokenLiteral(true);
+        if (input.compare("false") == 0)
+            return TokenLiteral(false);
         return TokenLiteral(input);
     }
     virtual string toString() { return "<native fun print>"; }
@@ -211,8 +216,8 @@ class LoxtoDeg : public LoxCallable {
 
 class LoxMath : public LoxInstance {
     map<string, TokenLiteral> fields = {
-        {"PI", TokenLiteral(3.141593)},
-        {"E",  TokenLiteral(2.718281)},
+        {"PI", TokenLiteral(3.1415926535897932384626433)},
+        {"E",  TokenLiteral(2.7182818284590452353602874)},
         {"radSin", TokenLiteral(new LoxSin())},
         {"radCos", TokenLiteral(new LoxCos())},
         {"sin", TokenLiteral(new LoxSovSin())},

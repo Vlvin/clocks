@@ -164,11 +164,12 @@ void Scanner::scanToken() {
             } else {
                 if (match('*')) {
                     while (true) {
-                        if (peek() == '\n') line++;
+                        if (advance() == '\n') line++;
                         if (isAtEnd()) break;
-                        if ((advance() == '*' && peek() == '/')) {
-                            advance();
-                            break;
+                        if (match('*')) {
+                            if (match('/')) {
+                                break;
+                            }
                         }
                     }
                 } else {

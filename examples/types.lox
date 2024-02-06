@@ -1,0 +1,37 @@
+/*
+ * Types in CLocks
+*/
+
+
+// CLocks now have only 6 types
+
+
+var none;
+print(type(none)); // NIL
+
+none = nil;
+print(type(none)); // NIL
+
+var num = 5;
+print(type(num)); // NUMBER
+
+var str = "5";
+print(type(str)); // STRING
+
+var bool = true;
+print(type(bool)); // BOOLEAN
+
+fun function() {
+
+}
+
+print(type(function)); // CALLABLE
+
+class Class {
+
+}
+
+print(type(Class)); // CALLABLE
+
+
+print(type( Class() )); // INSTANCE

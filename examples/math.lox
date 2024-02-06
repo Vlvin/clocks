@@ -1,0 +1,120 @@
+/*
+ * Math in CLocks
+*/
+
+
+var a = 0;
+var b = 5;
+
+// Lox have couple of math operators
+
+// addition
+a = a + b;
+print(a); // 5
+
+// substraction
+print(a - b); // 0
+
+// multiplication
+print(a * b); // 25
+
+// division
+print(a / b); // 1
+
+// modulo
+print(a % 3); // 2
+
+// complicated operations
+print( a % 3 + b * 3 - 7 ); // 10
+
+/*
+ * Math operations have priority as in a real world
+ * 1. Grouping
+ * 2. Multiplication/Division/Modulo
+ * 3. Substraction/Addition
+*/
+print( a % (3 + b) * (3 - 7) ); // -20
+
+// another kind of operation is negation
+// it can be procced using '-' operators
+var number = 5;
+print( -number ); // -5
+
+/*
+ * Negation have its own priority
+ * 1. Grouping
+ *    Negation goes here
+ * 2. Multiplication/Division/Modulo
+ * 3. Substraction/Addition
+*/
+print( a % (3 + b) * -(3 - 7) ); // 20
+
+/*
+ * CLocks has another kind of math
+ * Boolean algebra
+ * Boolean algebra have couple of operators
+ */
+
+print();
+
+// Equality check can be proceed using '==' operator
+// a is 5, b is 5
+print(a == b); // true
+
+print();
+// 'and' operator is used for conjunction
+print(true and false); // false
+
+print();
+// 'or' operator is used for disjunction
+print(true or false); // true
+print(true != true); // true
+
+print();
+// '!=' operator used for unequality or xor check
+print(a != -b); // true
+print(a != b); // false
+
+print();
+/* There are four other comparison operators
+ * '<' for less than
+ * '<=' for less-equals
+ * '>' for greater than
+ * '>-' for greater-equals
+ */
+
+print(2 < 2); // false
+print(2 <= 2); // true
+print(2 > 3); // false
+print(2 >= 3); // false
+
+
+print();
+// '!' operator is used for boolean negation
+print(!true); // false
+
+
+/*
+ * Boolean operations have own priority as in math
+ * 1. Negation
+ * 2. Comparison
+ * 3. Conjunction/Disjunction
+*/
+
+print();
+// for complex operations CLocks has Math class
+// It now has two constants
+print(Math.PI); // 3.141593
+print(Math.E); // 2.718281
+
+// Its small amount of function includes
+// sine for degrees and radians
+print(Math.sin(90)); // 1
+print(Math.radSin(Math.PI)); // 0
+// cosine for degrees and radians
+print(Math.cos(90)); // 0
+print(Math.radCos(Math.PI)); // -1
+
+// without any reasons CLocks has converters from radians to degrees, and from degrees to radians
+print(Math.degToRad(90) == Math.PI/2); // true
+print(Math.radToDeg(Math.PI) == 180); // true

@@ -1,0 +1,75 @@
+/*
+ * Functions in CLocks
+ */
+
+
+// function with no arguments
+fun foo() {
+    print(2 + 2);
+}
+
+// function call
+foo(); // 4
+foo(); // 4
+foo(); // 4
+
+print();
+// function with arguments
+fun bar(argument) {
+    print(argument);
+}
+
+bar(4); // 4
+bar("Hello world!"); // Hello world!
+bar(false); // false
+
+print();
+// recursive Function
+fun recursive(argument) {
+    if (argument <= 1) {
+        return argument;
+    }
+    print(argument);
+    return recursive(argument - 1);
+}
+
+var return_value = recursive(5);
+/*
+ * 5
+ * 4
+ * 3
+ * 2
+*/
+
+print();
+print(return_value); // 1
+
+print();
+/*
+ * since function is callable, 
+ * and callable in Literal type,
+ * variable can be assigned to a function,
+ * and function is a variable type
+*/
+
+var fun_var = bar;
+fun_var("function in body of variable");
+
+// and you stil able to
+// change your function as a variable
+
+print(bar); // <fun bar>
+bar = nil;
+print(bar); // nil
+
+print();
+
+// that's why I enhance const keyword abilities
+
+const fun new_bar(argument) {
+    print(argument);
+}
+
+new_bar("Great Reborn");
+
+new_bar = 5; // this now will raise Runtime Error
