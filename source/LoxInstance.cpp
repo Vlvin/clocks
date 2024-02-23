@@ -8,7 +8,7 @@ string LoxInstance::toString() {
     return "<Instance of " + LClass->name + ">";
 }
 
-TokenLiteral LoxInstance::get(Token name) {
+TokenLiteral LoxInstance::get(string modulename, Token name) {
     if (fields.count(name.lexeme) > 0) {
         return fields.find(name.lexeme)->second;
     }
@@ -23,6 +23,7 @@ TokenLiteral LoxInstance::get(Token name) {
         return method;
     }
     throw RuntimeException(
+        modulename,
         name,
         "Undefined property '" + name.lexeme + "'.");
 }

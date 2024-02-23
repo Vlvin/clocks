@@ -15,7 +15,7 @@ using namespace std;
 
 class Resolver: public VisitorExpr, public VisitorStmt {
 
-
+    string modulename;
     enum FunctionType {
         FNONE,
         FUNCTION,
@@ -43,6 +43,7 @@ class Resolver: public VisitorExpr, public VisitorStmt {
     vector<map<string, bool>> scopes;
 
 public:
+    void resolve(string modulename, vector<Stmt*> statements);
     void resolve(vector<Stmt*> statements);
     Resolver(Interpreter *interpreter);
 

@@ -31,7 +31,7 @@ void Environment::define(string name, TokenLiteral value) {
 
 void Environment::define(Token name, TokenLiteral value) {
     if (values.count(name.lexeme) > 0)
-        throw RuntimeException(name, "Redefenition of variable '" + name.lexeme + "'.");
+        throw RuntimeException(get("__name__").toString(), name, "Redefenition of variable '" + name.lexeme + "'.");
     else
         values.insert({name.lexeme, value});
 }
@@ -50,7 +50,7 @@ void Environment::assign(Token name, TokenLiteral value) {
                 else
                     errorTarget = "function";
             }
-            throw RuntimeException(name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
+            throw RuntimeException(get("__name__").toString(), name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
         }
     }
 
@@ -60,7 +60,7 @@ void Environment::assign(Token name, TokenLiteral value) {
     }
 
 
-    throw RuntimeException(name, "Undefined variable '" + name.lexeme + "'.");
+    throw RuntimeException(get("__name__").toString(), name, "Undefined variable '" + name.lexeme + "'.");
 }
 
 
@@ -77,7 +77,7 @@ void Environment::assignAt(int distance, Token name, TokenLiteral value) {
             else
                 errorTarget = "function";
         }
-        throw RuntimeException(name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
+        throw RuntimeException(get("__name__").toString(), name, "Const " + errorTarget + " '" + name.lexeme + "' can't be changed");
     }
 }
 
@@ -88,7 +88,7 @@ void Environment::include(Token source, Environment* toAdd, Environment* excepti
             if (exceptions->isExists(i->first)) {
                 define(i->first, i->second);
             } else {
-                throw RuntimeException(source, "Multiple declaration of '" + i->first + "' imported from " + source.lexeme + ".");
+                throw RuntimeException(get("__name__").toString(), source, "Multiple declaration of '" + i->first + "' imported from " + source.lexeme + ".");
             }
         } else if (!isExists(i->first)) {
             define(i->first, i->second);
@@ -119,7 +119,17 @@ TokenLiteral Environment::get(Token name){
     if (enclosing != NULL) {
         return enclosing->get(name);
     }
-    throw RuntimeException(name , "Undefined variable '" + name.lexeme + "'.");
+    throw RuntimeException(get("__name__").toString(), name , "Undefined variable '" + name.lexeme + "'.");
+}
+// DO NOT USE
+TokenLiteral Environment::get(string name){
+    if (values.count(name) > 0) {
+        return values.find(name)->second;
+    }
+    if (enclosing != NULL) {
+        return enclosing->get(name);
+    }
+    return TokenLiteral();
 }
 
 TokenLiteral Environment::getAt(int distance, string name) {

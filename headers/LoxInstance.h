@@ -14,6 +14,6 @@ public:
     LoxClass* LClass;
     LoxInstance(LoxClass* LClass);
     virtual string toString();
-    virtual TokenLiteral get(Token name);
+    virtual TokenLiteral get(string modulename, Token name);
     virtual TokenLiteral set(Token name, TokenLiteral value);
 };

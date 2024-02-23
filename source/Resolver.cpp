@@ -5,11 +5,18 @@
 using namespace std;
 
 
-Resolver::Resolver(Interpreter *interpreter) : interpreter(interpreter) {
+Resolver::Resolver(Interpreter *interpreter) : interpreter(interpreter), modulename("") {
     scopes = {};
 }
 
+void Resolver::resolve(string modulename, vector<Stmt*> statements) {
+    this->modulename = modulename;
+    for (Stmt* statement: statements) {
+        resolve(statement);
+    }
+}
 void Resolver::resolve(vector<Stmt*> statements) {
+    this->modulename = modulename;
     for (Stmt* statement: statements) {
         resolve(statement);
     }
@@ -58,6 +65,7 @@ void Resolver::declare(Token name) {
     map<string, bool> &scope = scopes.at(scopes.size()-1);
     if (scope.count(name.lexeme) > 0) {
         Clockwork::error(
+            modulename, 
             name,
             "Already a variable with this name in this scope."
             );
@@ -103,6 +111,7 @@ TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
     if (stmt.superclass != nullptr) {
         if (stmt.superclass->name == stmt.name)
             Clockwork::error(
+                modulename, 
                 stmt.name, 
                 "Class can't inherit from itself."); 
         resolve(stmt.superclass);
@@ -122,6 +131,7 @@ TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
         FunctionType declaration = FunctionType::STATICF;
         if (loxStatic->name.lexeme.compare("constructor") == 0) 
             Clockwork::error(
+                modulename, 
                 stmt.name,
                 "Class constructor can't be static"
             );
@@ -136,12 +146,14 @@ TokenLiteral Resolver::visitClassTokenLiteral(Class& stmt) {
 TokenLiteral Resolver::visitReturnTokenLiteral(Return &stmt) {
     if (currentFunction == FunctionType::FNONE) {
         Clockwork::error(
+            modulename, 
             stmt.keyword,
             "Can't return from top-level code.");
     }
     if (stmt.value != nullptr) {
         if (currentFunction == FunctionType::INITIALIZER) {
             Clockwork::error(
+                modulename, 
                 stmt.keyword,
                 "Can't return from class constructor."
             );
@@ -231,11 +243,13 @@ TokenLiteral Resolver::visitSetTokenLiteral(Set &expr) {
 TokenLiteral Resolver::visitThisTokenLiteral(This &expr) {
     if (currentClass == ClassType::CNONE) {
         Clockwork::error(
+            modulename, 
             expr.keyword,
             "Can't use 'this' outside of a class.");
     }
     if (currentFunction == FunctionType::STATICF) {
         Clockwork::error(
+            modulename, 
             expr.keyword,
             "Can't use 'this' in static method.");
     }
@@ -247,16 +261,19 @@ TokenLiteral Resolver::visitThisTokenLiteral(This &expr) {
 TokenLiteral Resolver::visitSuperTokenLiteral(Super &expr) {
     if (currentClass == ClassType::CNONE) {
         Clockwork::error(
+            modulename, 
             expr.keyword,
             "Can't use 'super' outside of a class.");
     }
     if (currentClass == ClassType::CLASS) {
         Clockwork::error(
+            modulename, 
             expr.keyword,
             "Can use 'super' only in subclass.");
     }
     if (currentFunction == FunctionType::STATICF) {
         Clockwork::error(
+            modulename, 
             expr.keyword,
             "Can't use 'super' in static method.");
     }
@@ -288,6 +305,7 @@ TokenLiteral Resolver::visitVariableTokenLiteral(Variable &expr) {
     if ((!scopes.empty()) && ((scopes.at(scopes.size()-1).count(expr.name.lexeme)) > 0)) {
             if ((scopes.at(scopes.size()-1).find(expr.name.lexeme)->second) == false)
                 Clockwork::error(
+                    modulename, 
                     expr.name,
                     "Can't read local variable in its own initializer."
                 );

@@ -26,6 +26,7 @@ class Environment {
     void merge(Environment* toAdd);
 
     TokenLiteral get(Token name);
+    TokenLiteral get(string name);
     bool isExists(string name);
     TokenLiteral getAt(int distance, string name);
 

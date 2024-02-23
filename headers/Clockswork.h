@@ -10,8 +10,9 @@ class RuntimeException : public exception {
 public:
     Token token;
     string message;
-    RuntimeException(Token token, string message) 
-        : token(token), message(message) {}
+    string modulename;
+    RuntimeException(string modulename, Token token, string message) 
+        : token(token), message(message), modulename(modulename) {}
 
 };
 
@@ -22,9 +23,12 @@ public:
     static bool hadRuntimeError;
     static void error(int line, string message);
     static void error(Token token, string message);
+    static void error(string modulename, int line, string message);
+    static void error(string modulename, Token token, string message);
     static void runtimeError(RuntimeException error);
 private:
     static void report(int line, string where, string message);
+    static void report(string modulename, int line, string where, string message);
 
     
 };

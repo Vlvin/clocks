@@ -15,10 +15,10 @@
 using namespace std;
 
 Parser::Parser(vector<Token> tokens) 
-    : tokens(tokens) {}
+    : tokens(tokens), modulename("") {}
 
-ParseError Parser::error(Token token, string message) {
-    Clockwork::error(token, message);
+ParseError Parser::error(string modulename, Token token, string message) {
+    Clockwork::error(modulename, token, message);
     return ParseError();
 }
 
@@ -79,17 +79,18 @@ Token Parser::previous() {
 
 Token Parser::consume(TokenType type, string message) {
     if (check(type)) return advance();
-    throw error(peek(), message);
+    throw error(modulename, peek(), message);
 }
 
 Token Parser::consumes(vector<TokenType> types, string message) {
     for (TokenType type: types) {
         if (check(type)) return advance();
     }
-    throw error(peek(), message);
+    throw error(modulename, peek(), message);
 }
 
-vector<Stmt*> Parser::parse() {
+vector<Stmt*> Parser::parse(string modulename) {
+    this->modulename = modulename;
     vector<Stmt*> statements = {};
     while (!isAtEnd()) {
         statements.push_back(declaration());
@@ -114,7 +115,7 @@ Stmt* Parser::constDeclaration() {
     if (match({VAR})) return varDeclaration(true);
     if (match({FUN})) return function("function", true);
     if (match({CLASS})) return classDeclaration(true);
-    throw error(peek(), "Expected type after keyword 'const'.");
+    throw error(modulename, peek(), "Expected type after keyword 'const'.");
 }
 
 Stmt* Parser::varDeclaration(bool isConst) {
@@ -173,7 +174,7 @@ Stmt* Parser::function(string kind, bool isConst) {
     if (!check(RIGHT_PAREN)) {
         do {
             if (parameters.size() >= 253) {
-                error(peek(), "Can't have more than 253 parameters.");
+                error(modulename, peek(), "Can't have more than 253 parameters.");
             }
             parameters.push_back(
                 consume(IDENTIFIER, "Expect parameter name.")
@@ -202,7 +203,9 @@ Stmt* Parser::statement() {
 
 Stmt* Parser::includeStatement() {
     Expr* modulename = expression();
-    return new Include(consume(SEMICOLON, "Expect ';' after value"), modulename);
+    Token cModule = previous();
+    consume(SEMICOLON, "Expect ';' after value");
+    return new Include(cModule, modulename);
 }
 
 Stmt* Parser::printStatements() {
@@ -320,7 +323,7 @@ Expr* Parser::assignment() {
             return new Set(property->object, property->name, value);
         }
 
-        error(equals, "Invalid assignmnt target");
+        error(modulename, equals, "Invalid assignmnt target");
     }
     return expr;
 }
@@ -430,6 +433,7 @@ Expr* Parser::finishCall(Expr* callee) {
         do {
             if (arguments.size() >= 253) {
                 error(
+                    modulename, 
                     peek(),
                     "Can't have more than 253 arguments."
                 );
@@ -463,5 +467,5 @@ Expr* Parser::primary() {
         return new Grouping(expr);
     }
 
-    throw error(peek(), "Expect expression. ");
+    throw error(modulename, peek(), "Expect expression. ");
 }

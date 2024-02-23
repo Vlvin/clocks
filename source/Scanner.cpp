@@ -12,7 +12,7 @@ using namespace std;
 #include "headers/Scanner.h"
 
 Scanner::Scanner(string source) 
-        : source(source) {}
+        : source(source), modulename("") {}
 
 map<string, TokenType> const Scanner::keywords = {
     {"and",    AND},
@@ -36,7 +36,8 @@ map<string, TokenType> const Scanner::keywords = {
     {"import",  INCLUDE}
 };
 
-vector<Token> Scanner::scanTokens() {
+vector<Token> Scanner::scanTokens(string modulename) {
+    this->modulename = modulename;
     while(!isAtEnd()) {
 
 
@@ -103,7 +104,7 @@ void Scanner::str() {
     }
 
     if (isAtEnd()) {
-        Clockwork::error(line, "Unterminated string");
+        Clockwork::error(modulename, line, "Unterminated string");
         return;
     }
 
@@ -192,7 +193,7 @@ void Scanner::scanToken() {
             } else if (isAlpha(c)) {
                 identifier();
             } else {
-            Clockwork::error(line, "unexpected character.");
+            Clockwork::error(modulename, line, "unexpected character.");
             }
             break;
     }

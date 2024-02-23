@@ -231,10 +231,10 @@ public:
     virtual string toString() {
         return "<native class Math";
     }
-    virtual TokenLiteral get(Token name) override {
+    virtual TokenLiteral get(string modulename, Token name) override {
         if (fields.count(name.lexeme) > 0)
             return fields.find(name.lexeme)->second;
-        Clockwork::error(name, "Can't find field.");
+        Clockwork::error(modulename, name, "Can't find field.");
         return TokenLiteral();
     }
     virtual TokenLiteral set(Token name, TokenLiteral value) override {

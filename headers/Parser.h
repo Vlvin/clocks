@@ -18,6 +18,7 @@ class ParseError : public exception {};
 class Parser {
     vector<Token> tokens;
     int current = 0;
+    string modulename;
 
     void synchronize();
 
@@ -59,9 +60,9 @@ class Parser {
     Token consume(TokenType type, string message);
     Token consumes(vector<TokenType> types, string message);
 
-    ParseError error(Token token, string message);
+    ParseError error(string modulename, Token token, string message);
 public:
-    vector<Stmt*> parse();
+    vector<Stmt*> parse(string modulename);
 
     Parser(vector<Token> tokens);
 };

@@ -23,13 +23,13 @@ using namespace std;
 #include "headers/Resolver.h"
 
 static Interpreter interpreter = Interpreter();
-void run(string source) {
+void run(string modulename, string source) {
     Scanner scanner(source);
-    vector<Token> tokens = scanner.scanTokens();
+    vector<Token> tokens = scanner.scanTokens(modulename);
     vector<Stmt*> statements = {};
     Parser parser(tokens);
     try {
-        statements = parser.parse();
+        statements = parser.parse(modulename);
     } catch (ParseError error) {
         return;
     }
@@ -38,9 +38,9 @@ void run(string source) {
     if (Clockwork::hadError) return;
 
     Resolver resolver(&interpreter);
-    resolver.resolve(statements);    
+    resolver.resolve(modulename, statements);    
     if (Clockwork::hadError) return;
-    interpreter.interpret(statements);
+    interpreter.interpret(modulename, statements);
 }
 
 void runPromt() {
@@ -51,7 +51,7 @@ void runPromt() {
         cin.getline(cline,64);
         line = string(cline);
         if (line == string("exit")) return;
-        run(line);
+        run("", line);
         Clockwork::hadError = false;
         Clockwork::hadRuntimeError = false;
     }
@@ -68,7 +68,7 @@ void runFile(string path) {
     string text( (std::istreambuf_iterator<char>(file) ),
                        (std::istreambuf_iterator<char>()    ) );;
 
-    run(text);
+    run(path, text);
     if (Clockwork::hadError) exit(65);
     if (Clockwork::hadRuntimeError) exit(70);
 }

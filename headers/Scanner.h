@@ -12,7 +12,7 @@ using namespace std;
 #include "TokenLiteral.h"
 
 class Scanner {
-    string source;
+    string source, modulename;
     vector<Token> tokens;
     int start = 0;
     int current = 0;
@@ -21,7 +21,7 @@ class Scanner {
 public:
     Scanner(string source);
 
-    vector<Token> scanTokens();
+    vector<Token> scanTokens(string modulename);
 
 private:
     static map<string, TokenType> const keywords;

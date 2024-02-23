@@ -50,7 +50,11 @@ string Interpreter::visitIfstring(If &stmt) { return ""; }
 string Interpreter::visitWhilestring(While &stmt) { return ""; }
 string Interpreter::visitIncludestring(Include &stmt) { return ""; }
 
-Interpreter::Interpreter() {
+Interpreter::Interpreter() : modulename("") {
+    builtins->define(
+        "__name__",
+        TokenLiteral(this->modulename, {false, true})
+    );
     builtins->define(
         "clock",
         TokenLiteral(new LoxClock(), {false, true})
@@ -135,12 +139,12 @@ bool Interpreter::isEqual(TokenLiteral left, TokenLiteral right) {
 
 void Interpreter::checkNumberOperand(Token oper, TokenLiteral operand) {
     if ((operand.type == TokenLiteral::NUMBER) || (operand.type == TokenLiteral::BOOLEAN)) return;
-    throw RuntimeException(oper, "Operand must be a number.");
+    throw RuntimeException(this->modulename, oper, "Operand must be a number.");
 }
 
 void Interpreter::checkNumberOperands(Token oper, TokenLiteral left, TokenLiteral right) {
     if (((left.type == TokenLiteral::NUMBER) || (left.type == TokenLiteral::BOOLEAN)) && ((right.type == TokenLiteral::NUMBER) || (right.type == TokenLiteral::BOOLEAN))) return;
-    throw RuntimeException(oper, "Operands must be numbers.");
+    throw RuntimeException(this->modulename, oper, "Operands must be numbers.");
 }
 
 TokenLiteral Interpreter::moduloDivision(TokenLiteral left, TokenLiteral right) {
@@ -179,10 +183,10 @@ TokenLiteral Interpreter::visitBinaryTokenLiteral(Binary &expr) {
             if ((left.type == TokenLiteral::STRING) && (right.type == TokenLiteral::STRING)) {
                 return left.toString() + right.toString();
             }
-            throw RuntimeException(expr.oper, "Operands must be two numbers or two strings.");
+            throw RuntimeException(this->modulename, expr.oper, "Operands must be two numbers or two strings.");
         case TokenType::SLASH:
             checkNumberOperands(expr.oper, left, right);
-            if (right.toNumber() == 0) throw RuntimeException(expr.oper, "Division by sero is forbidden.");
+            if (right.toNumber() == 0) throw RuntimeException(this->modulename, expr.oper, "Division by sero is forbidden.");
             return left.toNumber() / right.toNumber();
         case TokenType::STAR:
             checkNumberOperands(expr.oper, left, right);
@@ -205,10 +209,11 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
 
     LoxCallable* function = callee.toCallable();
     if (function == nullptr) {
-        throw RuntimeException(expr.paren, "Can only call functions and classes.");
+        throw RuntimeException(this->modulename, expr.paren, "Can only call functions and classes.");
     }
     if ((arguments.size() != function->arity()) && (function->arity() >= 0)) {
         throw RuntimeException(
+            this->modulename, 
             expr.paren, 
             "Expected " 
             + to_string(function->arity())
@@ -218,6 +223,7 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
     }
     if ((arguments.size() > function->arity()) && (function->arity() < 0)) {
         throw RuntimeException(
+            this->modulename, 
             expr.paren, 
             "Expected not more than " 
             + to_string(-function->arity())
@@ -231,7 +237,7 @@ TokenLiteral Interpreter::visitCallTokenLiteral(Call &expr) {
 TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
     TokenLiteral object = evaluate(expr.object);
     if(object.toInstance() != nullptr) {
-        return object.toInstance()->get(expr.name);
+        return object.toInstance()->get(this->modulename, expr.name);
     }
     LoxClass* staticTarget = dynamic_cast<LoxClass*>(object.toCallable());
     if(staticTarget != nullptr) {
@@ -240,6 +246,7 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
             return staticTargetMethod;
         else
             throw RuntimeException(
+                this->modulename, 
                 expr.name,
                 "Undefined static member '" + expr.name.lexeme + "'."
             );
@@ -247,6 +254,7 @@ TokenLiteral Interpreter::visitGetTokenLiteral(Get &expr) {
     }
     
     throw RuntimeException(
+        this->modulename, 
         expr.name,
         "Can get only from class or instance."
     );
@@ -256,6 +264,7 @@ TokenLiteral Interpreter::visitSetTokenLiteral(Set &expr) {
     TokenLiteral object = evaluate(expr.object);
     if(object.toInstance() == nullptr) {
         throw RuntimeException(
+            this->modulename, 
             expr.name,
             "Only instances have fields.");
     }
@@ -326,7 +335,7 @@ TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
         if (superclass.toCallable() != nullptr)
             parent = dynamic_cast<LoxClass*>(superclass.toCallable());
         if (parent == nullptr)
-            throw RuntimeException(stmt.name, "Superclass must be a class.");
+            throw RuntimeException(this->modulename, stmt.name, "Superclass must be a class.");
     }
     environment->define(stmt.name, TokenLiteral(TokenLiteral(), {false, stmt.isConst}));
     if (stmt.superclass != nullptr) {
@@ -343,6 +352,7 @@ TokenLiteral Interpreter::visitClassTokenLiteral(Class &stmt) {
         LoxFunction *function = new LoxFunction(*sMethod, environment, false);
         if (methods.count(sMethod->name.lexeme) > 0)
             throw RuntimeException(
+                this->modulename, 
                 sMethod->name,
                 "Can't declare method with same name as static.");
 
@@ -431,7 +441,7 @@ TokenLiteral Interpreter::visitIncludeTokenLiteral(Include &stmt) {
     Interpreter localI = Interpreter();
     Literal* moduleName = dynamic_cast<Literal*>(stmt.modulename);
     if (moduleName == nullptr) {
-        Clockwork::error(stmt.module, "No such file found in project folder.");
+        Clockwork::error(modulename, stmt.module, "No such file found in project folder.");
     }
     string path = moduleName->value.toString();
     // read file 
@@ -439,30 +449,40 @@ TokenLiteral Interpreter::visitIncludeTokenLiteral(Include &stmt) {
     fstream file(path, ios::in);
     
     if (!file.is_open()) {
-        Clockwork::error(stmt.module, "No such file found in project folder.");
+        Clockwork::error(modulename, stmt.module, "No such file found in project folder.");
     }
 
     string source( (std::istreambuf_iterator<char>(file) ),
                        (std::istreambuf_iterator<char>()    ) );
     // execute imported
     Scanner scanner(source);
-    vector<Token> tokens = scanner.scanTokens();
+    vector<Token> tokens = scanner.scanTokens(moduleName->value.toString());
     vector<Stmt*> statements = {};
     Parser parser(tokens);
     try {
-        statements = parser.parse();
+        statements = parser.parse(moduleName->value.toString());
     } catch (ParseError error) {
-        Clockwork::error(stmt.module, "Error ocured in import file on Parse.");
+        Clockwork::error(modulename, stmt.module, "Error ocured in import file on Parse.");
+        return TokenLiteral();
     }
 
 
-    if (Clockwork::hadError) Clockwork::error(stmt.module, "Error ocured in import file.");
+    if (Clockwork::hadError) {
+        Clockwork::error(modulename, stmt.module, "Error ocured in import file.");
+        return TokenLiteral();
+    }
 
     Resolver resolver(&localI);
-    resolver.resolve(statements);    
-    if (Clockwork::hadError) Clockwork::error(stmt.module, "Error ocured in import file on Resolving variables.");
-    localI.interpret(statements);
-    if (Clockwork::hadRuntimeError) Clockwork::error(stmt.module, "Error ocured in import file on Runtime.");
+    resolver.resolve(moduleName->value.toString(), statements);    
+    if (Clockwork::hadError) {
+        Clockwork::error(modulename, stmt.module, "Error ocured in import file on Resolving variables.");
+        return TokenLiteral();
+    }
+    localI.interpret(moduleName->value.toString(), statements);
+    if (Clockwork::hadRuntimeError) {
+        Clockwork::error(modulename, stmt.module, "Error ocured in import file on Runtime.");
+        return TokenLiteral();
+    }
     environment->include(stmt.module, localI.globals, builtins);
     return TokenLiteral();
 }
@@ -506,6 +526,19 @@ void Interpreter::interpret(Expr *expr) {
 }
 
 void Interpreter::interpret(vector<Stmt*> statements) {
+    try {
+        for (Stmt* statement: statements) {
+            execute(statement);
+            delete (statement);
+            statement = nullptr;
+        }
+    } catch (RuntimeException error) {
+        Clockwork::runtimeError(error);
+    }
+}
+
+void Interpreter::interpret(string modulename, vector<Stmt*> statements) {
+    this->modulename = modulename;
     try {
         for (Stmt* statement: statements) {
             execute(statement);

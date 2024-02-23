@@ -24,6 +24,7 @@ public:
     Environment *builtins = new Environment();
     Environment *environment = globals;
 private:
+    string modulename;
     vector<int> functionDistance = {};
     map<Expr*, int> locals = {};
     TokenLiteral evaluate(Expr *expr);
@@ -43,6 +44,7 @@ public:
     
     void resolve(Expr* expr, int depth);
     void interpret(vector<Stmt*> statements);
+    void interpret(string modulename, vector<Stmt*> statements);
     void interpret(Expr* expr);
     TokenLiteral executeBlock(vector<Stmt*> statements, Environment *environment);
 
