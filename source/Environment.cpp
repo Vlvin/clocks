@@ -81,6 +81,37 @@ void Environment::assignAt(int distance, Token name, TokenLiteral value) {
     }
 }
 
+void Environment::include(Token source, Environment* toAdd, Environment* exceptions) {
+    
+    for (auto i = toAdd->values.begin(); i != toAdd->values.end(); i++) {
+        if (isExists(i->first)) {
+            if (exceptions->isExists(i->first)) {
+                define(i->first, i->second);
+            } else {
+                throw RuntimeException(source, "Multiple declaration of '" + i->first + "' imported from " + source.lexeme + ".");
+            }
+        } else if (!isExists(i->first)) {
+            define(i->first, i->second);
+        }
+    }
+}
+
+void Environment::merge(Environment* toAdd) {
+    for (auto i = toAdd->values.begin(); i != toAdd->values.end(); i++) {
+            define(i->first, i->second);
+    }
+}
+
+bool Environment::isExists(string name) {
+    if (values.count(name) > 0) {
+        return true;
+    }
+    if (enclosing != NULL) {
+        return enclosing->isExists(name);
+    }
+    return false;
+}
+
 TokenLiteral Environment::get(Token name){
     if (values.count(name.lexeme) > 0) {
         return values.find(name.lexeme)->second;

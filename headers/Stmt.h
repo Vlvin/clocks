@@ -128,3 +128,14 @@ public:
 
 };
 
+class Include : public Stmt {
+public:
+   Token module;
+   Expr* modulename;
+   Include(Token module, Expr* modulename);
+
+   string acceptstring(VisitorStmt *visitor);
+   TokenLiteral acceptTokenLiteral(VisitorStmt *visitor);
+
+};
+

@@ -193,10 +193,16 @@ Stmt* Parser::statement() {
     if (match({PRINT})) return printStatements();
     if (match({RETURN})) return returnStatement();
     if (match({WHILE})) return whileStatement();
+    if (match({INCLUDE})) return includeStatement();
     if (match({LEFT_BRACE})) {
         return new Block(block());
     }
     return expressionStatement();
+}
+
+Stmt* Parser::includeStatement() {
+    Expr* modulename = expression();
+    return new Include(consume(SEMICOLON, "Expect ';' after value"), modulename);
 }
 
 Stmt* Parser::printStatements() {

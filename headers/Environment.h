@@ -22,8 +22,11 @@ class Environment {
     void define(Token name, TokenLiteral value);
     void assign(Token name, TokenLiteral value);
     void assignAt(int distance, Token name, TokenLiteral value);
+    void include(Token source, Environment* toAdd, Environment* exceptions);
+    void merge(Environment* toAdd);
 
     TokenLiteral get(Token name);
+    bool isExists(string name);
     TokenLiteral getAt(int distance, string name);
 
 };

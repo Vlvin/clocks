@@ -32,7 +32,8 @@ map<string, TokenType> const Scanner::keywords = {
     {"true",   TRUE},
     {"var",    VAR},
     {"static", STATIC},
-    {"while",  WHILE}
+    {"while",  WHILE},
+    {"import",  INCLUDE}
 };
 
 vector<Token> Scanner::scanTokens() {

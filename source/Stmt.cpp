@@ -101,3 +101,13 @@ TokenLiteral While::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor-
 }
 
 
+Include::Include(Token module, Expr* modulename)
+     : module(module),modulename(modulename) {}
+
+string Include::acceptstring(VisitorStmt *visitor) {   return visitor->visitIncludestring(*this);
+}
+
+TokenLiteral Include::acceptTokenLiteral(VisitorStmt *visitor) {   return visitor->visitIncludeTokenLiteral(*this);
+}
+
+

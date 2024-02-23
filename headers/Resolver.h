@@ -55,7 +55,8 @@ public:
    virtual string visitBlockstring(Block &stmt) override;
    virtual string visitIfstring(If &stmt) override;
    virtual string visitWhilestring(While &stmt) override;
-
+   virtual string visitIncludestring(Include &stmt) override;
+   
    virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) override;
    virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) override;
    virtual TokenLiteral visitClassTokenLiteral(Class &stmt) override;
@@ -65,6 +66,7 @@ public:
    virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) override;
    virtual TokenLiteral visitIfTokenLiteral(If &stmt) override;
    virtual TokenLiteral visitWhileTokenLiteral(While &stmt) override;
+   virtual TokenLiteral visitIncludeTokenLiteral(Include &stmt) override;
 
    virtual string visitBinarystring(Binary &expr) override;
    virtual string visitCallstring(Call &expr) override;

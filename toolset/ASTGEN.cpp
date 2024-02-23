@@ -33,7 +33,8 @@ vector<string> stmtypes = {
     "Var        : Token name, Expr* initializer, bool isConst",
     "Block      : vector<Stmt*> statements",
     "If         : Expr* condition, Stmt* thenBranch, Stmt* elseBranch",
-    "While      : Expr* condition, Stmt* body"
+    "While      : Expr* condition, Stmt* body",
+    "Include    : Token module, Expr* modulename"
 };
 
 vector<string> retutypes = {

@@ -79,6 +79,7 @@ string Resolver::visitVarstring(Var &stmt) {    return "";};
 string Resolver::visitBlockstring(Block &stmt) {    return "";};
 string Resolver::visitIfstring(If &stmt) {    return "";};
 string Resolver::visitWhilestring(While &stmt) {    return "";};
+string Resolver::visitIncludestring(Include &stmt) {    return "";};
 //you work here
 
 TokenLiteral Resolver::visitExpressionTokenLiteral(Expression &stmt) {
@@ -182,6 +183,11 @@ TokenLiteral Resolver::visitIfTokenLiteral(If &stmt) {
 TokenLiteral Resolver::visitWhileTokenLiteral(While &stmt) {
     resolve(stmt.condition);
     resolve(stmt.body);
+    return TokenLiteral();
+};
+
+TokenLiteral Resolver::visitIncludeTokenLiteral(Include &stmt) {
+    resolve(stmt.modulename);
     return TokenLiteral();
 };
 

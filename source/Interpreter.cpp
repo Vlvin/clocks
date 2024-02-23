@@ -1,11 +1,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <sys/time.h>
 #include <math.h>
 
 #include "headers/Standart.h"
 #include "headers/Clockswork.h"
+#include "headers/Scanner.h"
+#include "headers/Parser.h" 
+#include "headers/Resolver.h"
 #include "headers/Expr.h"
 #include "headers/Stmt.h"
 #include "headers/Token.h"
@@ -44,37 +48,38 @@ string Interpreter::visitVarstring(Var &stmt) { return ""; }
 string Interpreter::visitBlockstring(Block &stmt) { return ""; }
 string Interpreter::visitIfstring(If &stmt) { return ""; }
 string Interpreter::visitWhilestring(While &stmt) { return ""; }
+string Interpreter::visitIncludestring(Include &stmt) { return ""; }
 
 Interpreter::Interpreter() {
-    globals->define(
+    builtins->define(
         "clock",
         TokenLiteral(new LoxClock(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "exit",
         TokenLiteral(new LoxExit(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "print",
         TokenLiteral(new LoxPrint(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "input",
         TokenLiteral(new LoxInput(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "type",
         TokenLiteral(new LoxType(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "Math",
         TokenLiteral(new LoxMath(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "instanceOf",
         TokenLiteral(new InstanceOf(), {false, true})
     );
-    globals->define(
+    builtins->define(
         "superName",
         TokenLiteral(new SuperName(), {false, true})
     );
@@ -86,6 +91,8 @@ Interpreter::Interpreter() {
     //     "E",
     //     TokenLiteral(2.71828182845904523536028747135266249775724709369995, {false, true})
     // );
+
+    globals->merge(builtins);
 }
  
 TokenLiteral Interpreter::evaluate(Expr* expr) {
@@ -416,6 +423,47 @@ TokenLiteral Interpreter::visitWhileTokenLiteral(While &stmt) {
     }
 
     if (value.isReturn) return value;
+    return TokenLiteral();
+}
+
+
+TokenLiteral Interpreter::visitIncludeTokenLiteral(Include &stmt) {
+    Interpreter localI = Interpreter();
+    Literal* moduleName = dynamic_cast<Literal*>(stmt.modulename);
+    if (moduleName == nullptr) {
+        Clockwork::error(stmt.module, "No such file found in project folder.");
+    }
+    string path = moduleName->value.toString();
+    // read file 
+
+    fstream file(path, ios::in);
+    
+    if (!file.is_open()) {
+        Clockwork::error(stmt.module, "No such file found in project folder.");
+    }
+
+    string source( (std::istreambuf_iterator<char>(file) ),
+                       (std::istreambuf_iterator<char>()    ) );
+    // execute imported
+    Scanner scanner(source);
+    vector<Token> tokens = scanner.scanTokens();
+    vector<Stmt*> statements = {};
+    Parser parser(tokens);
+    try {
+        statements = parser.parse();
+    } catch (ParseError error) {
+        Clockwork::error(stmt.module, "Error ocured in import file on Parse.");
+    }
+
+
+    if (Clockwork::hadError) Clockwork::error(stmt.module, "Error ocured in import file.");
+
+    Resolver resolver(&localI);
+    resolver.resolve(statements);    
+    if (Clockwork::hadError) Clockwork::error(stmt.module, "Error ocured in import file on Resolving variables.");
+    localI.interpret(statements);
+    if (Clockwork::hadRuntimeError) Clockwork::error(stmt.module, "Error ocured in import file on Runtime.");
+    environment->include(stmt.module, localI.globals, builtins);
     return TokenLiteral();
 }
 

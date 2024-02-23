@@ -21,6 +21,7 @@ class Var;
 class Block;
 class If;
 class While;
+class Include;
 
 class VisitorStmt {
 public:
@@ -33,6 +34,7 @@ public:
    virtual string visitBlockstring(Block &stmt) = 0;
    virtual string visitIfstring(If &stmt) = 0;
    virtual string visitWhilestring(While &stmt) = 0;
+   virtual string visitIncludestring(Include &stmt) = 0;
 
    virtual TokenLiteral visitExpressionTokenLiteral(Expression &stmt) = 0;
    virtual TokenLiteral visitFunctionTokenLiteral(Function &stmt) = 0;
@@ -43,6 +45,7 @@ public:
    virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) = 0;
    virtual TokenLiteral visitIfTokenLiteral(If &stmt) = 0;
    virtual TokenLiteral visitWhileTokenLiteral(While &stmt) = 0;
+   virtual TokenLiteral visitIncludeTokenLiteral(Include &stmt) = 0;
 
 };
 

@@ -21,6 +21,7 @@ class LoxCallable;
 class Interpreter : public VisitorExpr, public VisitorStmt {
 public:
     Environment *globals = new Environment();
+    Environment *builtins = new Environment();
     Environment *environment = globals;
 private:
     vector<int> functionDistance = {};
@@ -67,6 +68,7 @@ public:
     virtual string visitBlockstring(Block &stmt) override;
     virtual string visitIfstring(If &stmt) override;
     virtual string visitWhilestring(While &stmt) override;
+    virtual string visitIncludestring(Include &stmt) override;
 
     virtual TokenLiteral visitBinaryTokenLiteral(Binary &expr) override;
     virtual TokenLiteral visitCallTokenLiteral(Call &expr) override;
@@ -90,6 +92,7 @@ public:
     virtual TokenLiteral visitBlockTokenLiteral(Block &stmt) override;
     virtual TokenLiteral visitIfTokenLiteral(If &stmt) override;
     virtual TokenLiteral visitWhileTokenLiteral(While &stmt) override;
+    virtual TokenLiteral visitIncludeTokenLiteral(Include &stmt) override;
 
 
 };
