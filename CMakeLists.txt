@@ -32,6 +32,7 @@ add_custom_command(
 
 set(SOURCES 
     ${SOURCEPATH}/Clockswork.cpp
+    ${SOURCEPATH}/Executioner.cpp
     ${SOURCEPATH}/Token.cpp
     ${SOURCEPATH}/TokenLiteral.cpp
     ${SOURCEPATH}/Scanner.cpp
