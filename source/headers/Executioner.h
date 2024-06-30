@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include "headers/TokenLiteral.h"
 class Interpreter;
 
 class Executioner {
@@ -19,7 +20,8 @@ public:
    * interpreter will be recreated with new environment
   */
   void setInterpreterToRenew(bool renew = true);
-
+  std::string getError();
+  TokenLiteral getContextValue(std::string name);
 private:
   void run(std::string module, std::string path);
   std::string lastError;

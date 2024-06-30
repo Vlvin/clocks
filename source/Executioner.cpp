@@ -96,3 +96,14 @@ void Executioner::runScript(std::string script, std::map<std::string, TokenLiter
 void Executioner::setInterpreterToRenew(bool renew) {
   interpreterMustBeRenewed = renew;
 }
+
+
+std::string Executioner::getError() {
+  return lastError;
+}
+
+TokenLiteral Executioner::getContextValue(std::string name) {
+  if (interpreter->globals->isExists(name))
+    return interpreter->globals->get(name);
+  return TokenLiteral();
+}
