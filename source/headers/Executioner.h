@@ -1,13 +1,14 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <map>
 class Interpreter;
 
 class Executioner {
 public:
   Executioner();
   void runFile(std::string path);
-  void runScript(std::string script);
+  void runScript(std::string script, std::map<std::string, TokenLiteral> context = {});
   void runPromt();
   /**
    * So fucking hard to name things.

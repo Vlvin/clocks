@@ -77,9 +77,19 @@ void Executioner::run(std::string modulename, std::string source) {
   }
 }
 
-void Executioner::runScript(std::string script) {
+void Executioner::runScript(std::string script, std::map<std::string, TokenLiteral> context) {
   if (interpreterMustBeRenewed) 
     this->interpreter = std::make_shared<Interpreter>();
+  for (auto mi = context.begin(); mi != context.end(); mi++) {
+    try {
+      if (interpreter->globals->isExists(mi->first))
+        interpreter->globals->assign(mi->first, mi->second);
+      else
+        interpreter->globals->define(mi->first, mi->second);
+    } catch (RuntimeException exception) {
+      std::cout << "Can't use " << mi->first << " variable, perhaps it is defined as const\n";
+    }
+  }
   run("script", script);
 }
 
