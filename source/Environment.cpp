@@ -63,6 +63,31 @@ void Environment::assign(Token name, TokenLiteral value) {
     throw RuntimeException(get("__name__").toString(), name, "Undefined variable '" + name.lexeme + "'.");
 }
 
+void Environment::assign(string name, TokenLiteral value) {
+    if (values.count(name) > 0) {
+        auto target = values.find(name);
+        if (((!target->second.isConst) || target->second.type == TokenLiteral::NIL)) {
+            target->second = TokenLiteral(value, {target->second.isReturn, target->second.isConst});
+            return;
+        } else {
+            string errorTarget = "variable";
+            if (target->second.type == TokenLiteral::CALLABLE) {
+                if (dynamic_cast<LoxClass*>(target->second.toCallable()) != nullptr)
+                    errorTarget = "class";
+                else
+                    errorTarget = "function";
+            }
+            throw RuntimeException(get("__name__").toString(), Token(VAR, name, get(name), 0), "Const " + errorTarget + " '" + name + "' can't be changed");
+        }
+    }
+
+    if (enclosing != NULL) {
+        enclosing->assign(name, value);
+        return;
+    }
+    throw RuntimeException(get("__name__").toString(), Token(VAR, name, get(name), 0), "Undefined variable '" + name + "'.");
+}
+
 
 void Environment::assignAt(int distance, Token name, TokenLiteral value) {
     Environment* onPosition = ancestor(distance);

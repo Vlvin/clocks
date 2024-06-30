@@ -1,0 +1,5 @@
+#include "headers/Scanner.h"
+#include "headers/Parser.h"
+#include "headers/Resolver.h"
+#include "headers/Interpreter.h"
+#include "headers/Clockswork.h"

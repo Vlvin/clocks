@@ -39,8 +39,6 @@ map<string, TokenType> const Scanner::keywords = {
 vector<Token> Scanner::scanTokens(string modulename) {
     this->modulename = modulename;
     while(!isAtEnd()) {
-
-
         start = current;
         scanToken();
     }
@@ -129,8 +127,9 @@ void Scanner::identifier() {
     while (isAlphaNumeric(peek())) advance();
 
     string text = source.substr(start, current-start);
-    TokenType type = (keywords.find(text))->second;
-    if (type == NULL) type = IDENTIFIER;
+    TokenType type = IDENTIFIER;
+    if (keywords.count(text)) 
+      type = (keywords.find(text))->second;
     addToken(type);
 }
 
