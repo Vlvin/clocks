@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-if (NOT BUILD_MODE)
+#if (NOT BUILD_MODE)
   set(BUILD_MODE "EXEC")
-endif()
+  #endif()
 
 message("BUILD_MODE ${BUILD_MODE}")
 
@@ -24,10 +24,10 @@ set(INCLUDE_PATH ${SOURCEPATH})
 add_executable(ASTGen ${PROJECT_SOURCE_DIR}/toolset/ASTGEN.cpp)
 
 add_custom_command(
-    TARGET ASTGen
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ASTGen
-    COMMENT "Build target AST"
-    VERBATIM
+  TARGET ASTGen
+  COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ASTGen
+  COMMENT "Build target AST"
+  VERBATIM
 )
 
 set(SOURCES 

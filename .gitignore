@@ -19,3 +19,5 @@ build
 CMakeCache.txt
 header.lox
 main.lox
+fibo.lox
+include/PyUtils.h

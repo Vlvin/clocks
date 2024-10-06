@@ -19,7 +19,7 @@ namespace PyUtils {
         vector<string> ret;
         vector<string> retch;
         while (seeker < tosplit.length()) {
-            for (;(tosplit[seeker] != separator) && (seeker <= tosplit.length()); seeker++);
+            for (;(seeker <= tosplit.length()) && (tosplit[seeker] != separator); seeker++);
             ret.push_back(strrange(tosplit, start, seeker));
             seeker++;
             start = seeker;
